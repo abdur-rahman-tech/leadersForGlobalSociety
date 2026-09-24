@@ -1,3 +1,4 @@
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -39,12 +40,65 @@ const programIcons = {
   network: Network,
 };
 
+// Numeric values for animation
 const heroStats = [
-  { value: "15+", label: "Countries", icon: Globe },
-  { value: "3,000+", label: "LinkedIn Family", icon: LinkedinIcon },
-  { value: "5,000+", label: "People Reached", icon: Users },
-  { value: "30+", label: "Team Members", icon: UsersRound },
+  { value: 15, suffix: "+", label: "Countries", icon: Globe },
+  { value: 3000, suffix: "+", label: "LinkedIn Family", icon: LinkedinIcon },
+  { value: 5000, suffix: "+", label: "People Reached", icon: Users },
+  { value: 30, suffix: "+", label: "Team Members", icon: UsersRound },
 ];
+
+// Counter Animation Component (Repeats every time you scroll to it)
+function AnimatedCounter({ end, suffix }: { end: number; suffix: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCount(0);
+          let startTime: number | null = null;
+          const duration = 2000;
+
+          const animateCount = (timestamp: number) => {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            
+            const easeProgress = progress * (2 - progress);
+            const currentCount = Math.floor(easeProgress * end);
+
+            setCount(currentCount);
+
+            if (progress < 1) {
+              requestAnimationFrame(animateCount);
+            } else {
+              setCount(end);
+            }
+          };
+
+          requestAnimationFrame(animateCount);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      if (element) observer.unobserve(element);
+    };
+  }, [end]);
+
+  return (
+    <span ref={ref}>
+      {count.toLocaleString()}{suffix}
+    </span>
+  );
+}
 
 const pillars = [
   {
@@ -112,22 +166,25 @@ export default function Home() {
   return (
     <>
       {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden bg-navy-950">
-        <img
-          src={heroImg}
-          alt="Young leaders raising a flag at sunset"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-navy-900/20" />
+      <section className="relative overflow-hidden bg-white">
+        <div className="absolute inset-0">
+          <img
+            src={heroImg}
+            alt="Young leaders raising a flag at sunset"
+            className="h-full w-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 to-white/-10" />
+
         <div className="relative mx-auto flex min-h-[560px] w-full max-w-7xl flex-col justify-center px-4 py-24 sm:px-6 lg:min-h-[620px] lg:px-8">
           <Reveal>
-            <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur">
+            <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-navy-900/15 bg-navy-900/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-navy-900 backdrop-blur">
               <Sparkles className="h-3.5 w-3.5 text-brand-red" />
               Youth-led · Global · Impact-driven
             </p>
           </Reveal>
           <Reveal delay={100}>
-            <h1 className="max-w-2xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-2xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-navy-950 sm:text-5xl lg:text-6xl">
               Youth Today.
               <br />
               <span className="text-brand-red">Global Leaders</span>
@@ -136,7 +193,7 @@ export default function Home() {
             </h1>
           </Reveal>
           <Reveal delay={200}>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-navy-100/90 sm:text-lg">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-700 sm:text-lg">
               Leaders for Global Society is a youth-led global platform empowering young
               people through leadership, professional development, mentorship, skills,
               SDGs and access to international opportunities.
@@ -147,7 +204,7 @@ export default function Home() {
               <Btn to="/about" arrow>
                 Explore LGS
               </Btn>
-              <Btn to="/join" variant="white-outline">
+              <Btn to="/join" variant="outline">
                 Join Our Community
               </Btn>
             </div>
@@ -169,7 +226,7 @@ export default function Home() {
               </span>
               <span>
                 <span className="block font-display text-2xl font-extrabold text-navy-900">
-                  {s.value}
+                  <AnimatedCounter end={s.value} suffix={s.suffix} />
                 </span>
                 <span className="block text-xs font-medium text-slate-500">{s.label}</span>
               </span>
@@ -307,7 +364,6 @@ export default function Home() {
       {/* ================= OPPORTUNITIES + PLACE FOR YOU ================= */}
       <section className="py-16 sm:py-20">
         <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-          {/* Opportunities tiles */}
           <Reveal variant="left" className="rounded-2xl border-2 border-brand-red/15 bg-white p-6 shadow-sm sm:p-8">
             <p className="font-display text-xs font-bold uppercase tracking-[0.18em] text-brand-red">
               Opportunities Hub
@@ -336,7 +392,6 @@ export default function Home() {
             </div>
           </Reveal>
 
-          {/* Place for you */}
           <Reveal variant="right" className="rounded-2xl bg-navy-50/70 p-6 ring-1 ring-navy-100 sm:p-8">
             <p className="font-display text-xs font-bold uppercase tracking-[0.18em] text-brand-red">
               Join the LGS Community
