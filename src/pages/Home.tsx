@@ -46,86 +46,74 @@ const heroStats = [
   { value: "30+", label: "Team Members", icon: UsersRound },
 ];
 
-const pillars = [
-  {
-    label: "LEAD",
-    icon: Rocket,
-    color: "bg-brand-red",
-    text: "Develop leadership, communication and professional skills.",
-  },
-  {
-    label: "CONNECT",
-    icon: Network,
-    color: "bg-blue-600",
-    text: "Build meaningful networks with mentors, peers and opportunities.",
-  },
-  {
-    label: "IMPACT",
-    icon: Sparkles,
-    color: "bg-navy-800",
-    text: "Create real change for a more inclusive and sustainable world.",
-  },
-];
+function AnimatedStat({ value, label, icon: Icon, delay = 0 }) {
+  const [count, setCount] = useState(0);
 
-const oppTiles = [
-  { label: "Scholarships", icon: GraduationCap },
-  { label: "Fellowships", icon: Rocket },
-  { label: "Internships", icon: Briefcase },
-  { label: "Conferences", icon: Megaphone },
-  { label: "Courses", icon: BookOpen },
-  { label: "Youth Programs", icon: Users },
-];
+  useEffect(() => {
+    const target = Number(String(value).replace(/[^0-9]/g, ""));
+    const start = performance.now();
+    let frameId;
 
-const placeCards = [
-  { label: "Become an Ambassador", icon: Globe, note: "Represent LGS in your country" },
-  { label: "Join a Fellowship", icon: Rocket, note: "Learn, create and lead with a cohort" },
-  { label: "Volunteer", icon: Heart, note: "Give your time, grow your impact" },
-  { label: "Partner With Us", icon: Handshake, note: "Collaborate as an organization" },
-];
+    const animate = (time) => {
+      const progress = Math.min((time - start) / 1400, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const next = Math.round(target * eased);
+      setCount(next);
 
-const news = [
-  { tag: "Milestone", title: "LGS Completes First Year of Impact", date: "Aug 2026" },
-  { tag: "Programs", title: "Future Skills Fellowship Cohort 01 Graduates", date: "Jun 2026" },
-  { tag: "Community", title: "New International Ambassadors Onboarded", date: "May 2026" },
-];
+      if (progress < 1) {
+        frameId = requestAnimationFrame(animate);
+      }
+    };
 
-const stories = [
-  {
-    quote:
-      "The Future Skills Fellowship gave me the confidence to lead a community project in my city — and a network that spans 15 countries.",
-    name: "Ayesha Khan",
-    role: "FSF Cohort 01 · Pakistan",
-    initials: "AK",
-    color: "bg-rose-500",
-  },
-  {
-    quote:
-      "Through LGS I found mentors, real opportunities, and most importantly — a global family of young people who want to build a better future.",
-    name: "Daniel Kim",
-    role: "Country Ambassador · South Korea",
-    initials: "DK",
-    color: "bg-navy-600",
-  },
-];
+    const timer = window.setTimeout(() => {
+      frameId = requestAnimationFrame(animate);
+    }, delay);
+
+    return () => {
+      window.clearTimeout(timer);
+      if (frameId) cancelAnimationFrame(frameId);
+    };
+  }, [value, delay]);
+
+  return (
+    <div className="flex items-center justify-center gap-3.5 px-4 py-3">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy-50 text-navy-800 shadow-sm ring-1 ring-navy-100">
+        <Icon className="h-5 w-5" />
+      </span>
+
+      <span>
+        <span className="block font-display text-2xl font-extrabold text-navy-900 sm:text-[2rem]">
+          {count}
+          {String(value).includes("+") ? "+" : ""}
+        </span>
+        <span className="block text-xs font-medium text-slate-500">{label}</span>
+      </span>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
     <>
       {/* ================= HERO ================= */}
-      <section className="relative overflow-hidden bg-navy-950">
+      <section className="relative isolate overflow-hidden bg-[#071523]">
         <img
           src={heroImg}
           alt="Young leaders raising a flag at sunset"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full scale-105 object-cover opacity-60 blur-[0.5px]"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-950/70 to-navy-900/20" />
-        <div className="relative mx-auto flex min-h-[560px] w-full max-w-7xl flex-col justify-center px-4 py-24 sm:px-6 lg:min-h-[620px] lg:px-8">
+
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.75),transparent_18%),linear-gradient(90deg,rgba(4,15,24,0.96)_0%,rgba(12,21,34,0.84)_32%,rgba(12,21,34,0.42)_62%,rgba(12,21,34,0.58)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_24%,rgba(9,18,28,0.18))]" />
+
+        <div className="relative mx-auto flex min-h-[560px] w-full max-w-[1600px] flex-col justify-center px-4 py-24 sm:px-6 lg:min-h-[620px] lg:px-8">
           <Reveal>
-            <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur">
+            <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
               <Sparkles className="h-3.5 w-3.5 text-brand-red" />
               Youth-led · Global · Impact-driven
             </p>
           </Reveal>
+
           <Reveal delay={100}>
             <h1 className="max-w-2xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
               Youth Today.
@@ -135,6 +123,7 @@ export default function Home() {
               Tomorrow.
             </h1>
           </Reveal>
+
           <Reveal delay={200}>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-navy-100/90 sm:text-lg">
               Leaders for Global Society is a youth-led global platform empowering young
@@ -142,6 +131,7 @@ export default function Home() {
               SDGs and access to international opportunities.
             </p>
           </Reveal>
+
           <Reveal delay={300}>
             <div className="mt-8 flex flex-wrap gap-3.5">
               <Btn to="/about" arrow>
@@ -156,23 +146,14 @@ export default function Home() {
       </section>
 
       {/* ================= STATS BAR ================= */}
-      <section className="border-b border-navy-100 bg-white" aria-label="Key statistics">
-        <div className="mx-auto grid w-full max-w-7xl grid-cols-2 divide-navy-100 px-4 py-8 sm:px-6 lg:grid-cols-4 lg:divide-x lg:px-8">
+      <section
+        className="border-b border-navy-100 bg-white/90 shadow-[0_-1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm"
+        aria-label="Key statistics"
+      >
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-2 px-4 py-8 sm:px-6 lg:grid-cols-4 lg:px-8">
           {heroStats.map((s, i) => (
-            <Reveal
-              key={s.label}
-              delay={i * 90}
-              className="flex items-center justify-center gap-3.5 px-4 py-3"
-            >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy-50 text-navy-800">
-                <s.icon className="h-5 w-5" />
-              </span>
-              <span>
-                <span className="block font-display text-2xl font-extrabold text-navy-900">
-                  {s.value}
-                </span>
-                <span className="block text-xs font-medium text-slate-500">{s.label}</span>
-              </span>
+            <Reveal key={s.label} delay={i * 90} className="flex items-center justify-center">
+              <AnimatedStat value={s.value} label={s.label} icon={s.icon} delay={i * 120} />
             </Reveal>
           ))}
         </div>
