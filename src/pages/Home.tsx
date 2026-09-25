@@ -27,7 +27,7 @@ import { Btn, Pill, SectionHeading } from "@/components/ui";
 import { LinkedinIcon } from "@/components/BrandIcons";
 import { programs } from "@/data";
 
-import heroImg from "@/assets/hero-home.jpg";
+import heroImg from "@/assets/hero-home(1).jpg";
 import fellowshipImg from "@/assets/fellowship.jpg";
 import networkImg from "@/assets/hero-network.jpg";
 import eventsImg from "@/assets/hero-events.jpg";
@@ -69,7 +69,7 @@ function AnimatedCounter({ end, suffix }: { end: number; suffix: string }) {
           const animateCount = (timestamp: number) => {
             if (!startTime) startTime = timestamp;
             const progress = Math.min((timestamp - startTime) / duration, 1);
-            
+
             const easeProgress = progress * (2 - progress);
             const currentCount = Math.floor(easeProgress * end);
 
@@ -249,85 +249,125 @@ function AnimatedStat({ value, label, icon: Icon, delay = 0 }) {
 export default function Home() {
   return (
     <>
-            <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
-              <Sparkles className="h-3.5 w-3.5 text-brand-red" />
-              Youth-led · Global · Impact-driven
-            </p>
-              <Sparkles className="h-3.5 w-3.5 text-brand-red" />
-              Youth-led · Global · Impact-driven
-            </p>
-          </Reveal>
+      <section
+        id="top"
+        className="relative isolate overflow-hidden bg-[#fdfaf7]"
+      >
+        {/* Background photography */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 lg:left-[16%]">
+            <img
+              src={heroImg}
+              alt="A group of young people standing together looking toward a city skyline"
+              className="h-full w-full object-cover object-[58%_46%]"
+              fetchPriority="high"
+            />
+          </div>
 
-          <Reveal delay={100}>
-            <h1 className="max-w-2xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-navy-950 sm:text-5xl lg:text-6xl">
-              Youth Today.
-              <br />
-              <span className="text-brand-red">Global Leaders</span>
-              <br />
-              Tomorrow.
-            </h1>
-          </Reveal>
+          {/* Mobile readability wash */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#fdfaf7]/96 via-[#fdfaf7]/88 to-[#fdfaf7]/55 lg:hidden" />
 
-          <Reveal delay={200}>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-700 sm:text-lg">
-              Leaders for Global Society is a youth-led global platform empowering young
-              people through leadership, professional development, mentorship, skills,
-              SDGs and access to international opportunities.
-            </p>
-          </Reveal>
+          {/* Exact left fade: solid cream behind the text, smoothly revealing the photo */}
+          <div className="absolute inset-0 hidden bg-[linear-gradient(97deg,#fdfaf7_0%,#fdfaf7_26%,rgba(253,250,247,.94)_34%,rgba(253,250,247,.50)_44%,rgba(253,250,247,.08)_54%,rgba(253,250,247,0)_62%)] lg:block" />
 
-          <Reveal delay={300}>
-            <div className="mt-8 flex flex-wrap gap-3.5">
-              <Btn to="/about" arrow>
-                Explore LGS
-              </Btn>
-              <Btn to="/join" variant="outline">
-                Join Our Community
-              </Btn>
-            </div>
-          </Reveal>
->>>>>>> 739b4e183347d7f07a515720eb9eea9777f8cea4
+          {/* Soft bottom blend */}
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#fdfaf7]/30 to-transparent" />
         </div>
 
-        <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
-          <Sparkles className="h-3.5 w-3.5 text-brand-red" />
-          Youth-led · Global · Impact-driven
-        </p>
-      </Reveal>
-
-      <Reveal delay={100}>
-        <h1 className="max-w-2xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
-          Youth Today.
+        {/* Handwritten note over the photo */}
+        <p className="hand pointer-events-none absolute right-[4%] top-[15%] hidden max-w-[230px] -rotate-[3deg] text-right text-[28px] leading-[1.08] text-white drop-shadow-[0_3px_10px_rgba(4,18,45,.55)] lg:block xl:text-[34px]">
+          Different
           <br />
-          <span className="text-brand-red">Global Leaders</span>
+          Backgrounds.
           <br />
-          Tomorrow.
-        </h1>
-      </Reveal>
-
-      <Reveal delay={200}>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-navy-100/90 sm:text-lg">
-          Leaders for Global Society is a youth-led global platform empowering young
-          people through leadership, professional development, mentorship, skills,
-          SDGs and access to international opportunities.
+          Same Dream.
         </p>
-      </Reveal>
 
-      <Reveal delay={300}>
-        <div className="mt-8 flex flex-wrap gap-3.5">
-          <Btn to="/about" arrow>
-            Explore LGS
-          </Btn>
-          <Btn to="/join" variant="white-outline">
-            Join Our Community
-          </Btn>
+        {/* Corner ribbon */}
+        <svg
+          viewBox="0 0 300 220"
+          className="pointer-events-none absolute -bottom-2 right-0 hidden h-[190px] w-[260px] lg:block"
+          aria-hidden="true"
+          fill="none"
+        >
+          <path
+            d="M300 8C196 40 122 122 92 222"
+            stroke="#ffffff"
+            strokeWidth="30"
+            opacity=".95"
+          />
+          <path
+            d="M300 58C214 86 152 152 128 222"
+            stroke="#ea1b2d"
+            strokeWidth="10"
+          />
+          <path
+            d="M300 94C232 118 186 170 168 222"
+            stroke="#0b2e63"
+            strokeWidth="7"
+            opacity=".85"
+          />
+        </svg>
+
+        {/* 1376px shell gives the same left text allocation as the reference image */}
+        <div className="mx-auto flex min-h-[500px] w-full max-w-[1540px] items-center px-0 py-10 sm:min-h-[540px] lg:min-h-[587px] lg:py-0">
+          <div className="max-w-[560px] lg:max-w-[500px] lg:translate-x-[80px]">
+            <Reveal>
+              <p className="font-display text-[11px] font-bold uppercase tracking-[0.19em] text-[#1c4d8c] sm:text-[12px]">
+                Leaders for Global Society (LGS)
+              </p>
+            </Reveal>
+
+            <Reveal delay={80}>
+              <h1 className="mt-4 font-display font-extrabold leading-[1.04] tracking-[-0.025em] text-[#0b2e63]">
+                <span className="block text-[38px] sm:text-[43px] lg:text-[46px]">
+                  YOUTH TODAY.
+                </span>
+
+                <span className="my-[1px] block font-display text-[40px] font-black italic leading-[1.04] tracking-[-0.025em] text-[#ea1b2d] sm:text-[47px] lg:text-[53px]">
+                  GLOBAL LEADERS
+                </span>
+
+                <span className="block text-[38px] sm:text-[43px] lg:text-[46px]">
+                  TOMORROW.
+                </span>
+              </h1>
+            </Reveal>
+
+            <Reveal delay={340}>
+              <p className="mt-6 max-w-[500px] text-[14px] leading-[1.75] text-[#42597c] sm:text-[15px]">
+                We are a youth-led global platform empowering young people through leadership,
+                professional development, mentorship, skills, SDGs and access to international
+                opportunities.
+              </p>
+            </Reveal>
+
+            <Reveal delay={420}>
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                {/* Reference button: 176px × ~51px, fully rounded */}
+                <Link
+                  to="/about"
+                  className="group inline-flex h-[52px] min-w-[182px] items-center justify-center gap-2.5 rounded-full bg-[#ea1b2d] px-6 font-display text-[13.5px] font-semibold text-white shadow-[0_14px_30px_-14px_rgba(234,27,45,.95)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#d91829]"
+                >
+                  Explore LGS
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+
+                {/* Reference button: ~220px × ~51px, fully rounded */}
+                <Link
+                  to="/join"
+                  className="inline-flex h-[52px] min-w-[228px] items-center justify-center rounded-full border border-[#c9d8ea] bg-white/95 px-7 font-display text-[13.5px] font-semibold text-[#0b2e63] shadow-[0_10px_26px_-18px_rgba(6,35,80,.8)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ea1b2d] hover:text-[#ea1b2d]"
+                >
+                  Join Our Community
+                </Link>
+              </div>
+            </Reveal>
+          </div>
         </div>
-      </Reveal>
-    </div >
-      </section >
+      </section>
 
       <section
-        className="border-b border-navy-100 bg-white/90 shadow-[0_-1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm"
+        className="border-b border-[#dce7f3] bg-[#eaf3fd]/90 shadow-[0_-1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm"
         aria-label="Key statistics"
       >
         <div className="mx-auto grid w-full max-w-7xl grid-cols-2 px-4 py-8 sm:px-6 lg:grid-cols-4 lg:px-8">
@@ -335,18 +375,19 @@ export default function Home() {
             <Reveal
               key={s.label}
               delay={i * 90}
-              className="flex items-center justify-center gap-3.5 px-4 py-3"
+              className="flex items-center justify-center gap-3.5 border-r border-[#cddceb] px-4 py-3 last:border-r-0"
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy-50 text-navy-800">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/70 text-navy-800 shadow-sm">
                 <s.icon className="h-5 w-5" />
               </span>
               <span>
                 <span className="block font-display text-2xl font-extrabold text-navy-900">
                   <AnimatedCounter end={s.value} suffix={s.suffix} />
                 </span>
-                <span className="block text-xs font-medium text-slate-500">{s.label}</span>
+                <span className="block text-xs font-medium text-slate-500">
+                  {s.label}
+                </span>
               </span>
-            </Reveal>
             </Reveal>
           ))}
         </div>
