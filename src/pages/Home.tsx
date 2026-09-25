@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { useEffect, useState, useRef } from "react";
+=======
+import { useEffect, useState } from "react";
+>>>>>>> fe45aeb04fe97c141d3cf3e8ed37f4b49e0e32c0
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -21,10 +25,12 @@ import {
   Users,
   UsersRound,
 } from "lucide-react";
+
 import Reveal from "@/components/Reveal";
 import { Btn, Pill, SectionHeading } from "@/components/ui";
 import { LinkedinIcon } from "@/components/BrandIcons";
 import { programs } from "@/data";
+
 import heroImg from "@/assets/hero-home.jpg";
 import fellowshipImg from "@/assets/fellowship.jpg";
 import networkImg from "@/assets/hero-network.jpg";
@@ -102,69 +108,152 @@ function AnimatedCounter({ end, suffix }: { end: number; suffix: string }) {
 
 const pillars = [
   {
-    label: "LEAD",
-    icon: Rocket,
+    label: "Leadership",
+    text: "Build confidence, communication and strategic thinking.",
     color: "bg-brand-red",
-    text: "Develop leadership, communication and professional skills.",
+    icon: Rocket,
   },
   {
-    label: "CONNECT",
-    icon: Network,
-    color: "bg-blue-600",
-    text: "Build meaningful networks with mentors, peers and opportunities.",
-  },
-  {
-    label: "IMPACT",
-    icon: Sparkles,
+    label: "Mentorship",
+    text: "Grow with experienced guides and peer support.",
     color: "bg-navy-800",
-    text: "Create real change for a more inclusive and sustainable world.",
+    icon: Handshake,
+  },
+  {
+    label: "Impact",
+    text: "Turn ideas into real action for communities and SDGs.",
+    color: "bg-brand-blue",
+    icon: Heart,
   },
 ];
 
 const oppTiles = [
   { label: "Scholarships", icon: GraduationCap },
-  { label: "Fellowships", icon: Rocket },
-  { label: "Internships", icon: Briefcase },
-  { label: "Conferences", icon: Megaphone },
-  { label: "Courses", icon: BookOpen },
-  { label: "Youth Programs", icon: Users },
+  { label: "Fellowships", icon: BookOpen },
+  { label: "Jobs", icon: Briefcase },
+  { label: "Volunteering", icon: Heart },
+  { label: "Events", icon: CalendarDays },
+  { label: "Networking", icon: Network },
 ];
 
 const placeCards = [
-  { label: "Become an Ambassador", icon: Globe, note: "Represent LGS in your country" },
-  { label: "Join a Fellowship", icon: Rocket, note: "Learn, create and lead with a cohort" },
-  { label: "Volunteer", icon: Heart, note: "Give your time, grow your impact" },
-  { label: "Partner With Us", icon: Handshake, note: "Collaborate as an organization" },
-];
-
-const news = [
-  { tag: "Milestone", title: "LGS Completes First Year of Impact", date: "Aug 2026" },
-  { tag: "Programs", title: "Future Skills Fellowship Cohort 01 Graduates", date: "Jun 2026" },
-  { tag: "Community", title: "New International Ambassadors Onboarded", date: "May 2026" },
+  {
+    label: "Students",
+    note: "For learners and future leaders.",
+    icon: GraduationCap,
+  },
+  {
+    label: "Professionals",
+    note: "For mentors and career builders.",
+    icon: Briefcase,
+  },
+  {
+    label: "Creators",
+    note: "For people with ideas and energy.",
+    icon: Megaphone,
+  },
+  {
+    label: "Volunteers",
+    note: "For community-driven changemakers.",
+    icon: Handshake,
+  },
 ];
 
 const stories = [
   {
-    quote:
-      "The Future Skills Fellowship gave me the confidence to lead a community project in my city — and a network that spans 15 countries.",
-    name: "Ayesha Khan",
-    role: "FSF Cohort 01 · Pakistan",
+    name: "Amina K.",
+    role: "Youth Leader",
     initials: "AK",
-    color: "bg-rose-500",
+    color: "bg-brand-red",
+    quote:
+      "LGS gave me the platform, confidence, and network to turn my ideas into action.",
   },
   {
+    name: "Daniel T.",
+    role: "Fellowship Alumni",
+    initials: "DT",
+    color: "bg-navy-800",
     quote:
-      "Through LGS I found mentors, real opportunities, and most importantly — a global family of young people who want to build a better future.",
-    name: "Daniel Kim",
-    role: "Country Ambassador · South Korea",
-    initials: "DK",
-    color: "bg-navy-600",
+      "The mentorship and exposure I got through LGS changed the way I see leadership and impact.",
+  },
+  {
+    name: "Sara M.",
+    role: "Community Builder",
+    initials: "SM",
+    color: "bg-brand-blue",
+    quote:
+      "I found my people here, and together we created something meaningful for our community.",
   },
 ];
+
+const news = [
+  {
+    tag: "Event",
+    date: "Apr 2026",
+    title: "Youth leadership summit opens registration for this season.",
+  },
+  {
+    tag: "Impact",
+    date: "Mar 2026",
+    title: "LGS members launched a regional outreach project across campuses.",
+  },
+  {
+    tag: "Program",
+    date: "Feb 2026",
+    title: "New fellowship cohort begins with mentorship and skill labs.",
+  },
+];
+
+function AnimatedStat({ value, label, icon: Icon, delay = 0 }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const target = Number(String(value).replace(/[^0-9]/g, ""));
+    const start = performance.now();
+    let frameId;
+
+    const animate = (time) => {
+      const progress = Math.min((time - start) / 1400, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const next = Math.round(target * eased);
+      setCount(next);
+
+      if (progress < 1) {
+        frameId = requestAnimationFrame(animate);
+      }
+    };
+
+    const timer = window.setTimeout(() => {
+      frameId = requestAnimationFrame(animate);
+    }, delay);
+
+    return () => {
+      window.clearTimeout(timer);
+      if (frameId) cancelAnimationFrame(frameId);
+    };
+  }, [value, delay]);
+
+  return (
+    <div className="flex items-center justify-center gap-3.5 px-4 py-3">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy-50 text-navy-800 shadow-sm ring-1 ring-navy-100">
+        <Icon className="h-5 w-5" />
+      </span>
+
+      <span>
+        <span className="block font-display text-2xl font-extrabold text-navy-900 sm:text-[2rem]">
+          {count}
+          {String(value).includes("+") ? "+" : ""}
+        </span>
+        <span className="block text-xs font-medium text-slate-500">{label}</span>
+      </span>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
     <>
+<<<<<<< HEAD
       {/* ================= HERO ================= */}
       <section className="relative overflow-hidden bg-white">
         <div className="absolute inset-0">
@@ -179,10 +268,26 @@ export default function Home() {
         <div className="relative mx-auto flex min-h-[560px] w-full max-w-7xl flex-col justify-center px-4 py-24 sm:px-6 lg:min-h-[620px] lg:px-8">
           <Reveal>
             <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-navy-900/15 bg-navy-900/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-navy-900 backdrop-blur">
+=======
+      <section className="relative isolate overflow-hidden bg-[#071523]">
+        <img
+          src={heroImg}
+          alt="Young leaders raising a flag at sunset"
+          className="absolute inset-0 h-full w-full scale-105 object-cover opacity-60 blur-[0.5px]"
+        />
+
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.75),transparent_18%),linear-gradient(90deg,rgba(4,15,24,0.96)_0%,rgba(12,21,34,0.84)_32%,rgba(12,21,34,0.42)_62%,rgba(12,21,34,0.58)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_24%,rgba(9,18,28,0.18))]" />
+
+        <div className="relative mx-auto flex min-h-[560px] w-full max-w-[1600px] flex-col justify-center px-4 py-24 sm:px-6 lg:min-h-[620px] lg:px-8">
+          <Reveal>
+            <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+>>>>>>> fe45aeb04fe97c141d3cf3e8ed37f4b49e0e32c0
               <Sparkles className="h-3.5 w-3.5 text-brand-red" />
               Youth-led · Global · Impact-driven
             </p>
           </Reveal>
+
           <Reveal delay={100}>
             <h1 className="max-w-2xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-navy-950 sm:text-5xl lg:text-6xl">
               Youth Today.
@@ -192,6 +297,7 @@ export default function Home() {
               Tomorrow.
             </h1>
           </Reveal>
+
           <Reveal delay={200}>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-700 sm:text-lg">
               Leaders for Global Society is a youth-led global platform empowering young
@@ -199,6 +305,7 @@ export default function Home() {
               SDGs and access to international opportunities.
             </p>
           </Reveal>
+
           <Reveal delay={300}>
             <div className="mt-8 flex flex-wrap gap-3.5">
               <Btn to="/about" arrow>
@@ -212,10 +319,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= STATS BAR ================= */}
-      <section className="border-b border-navy-100 bg-white" aria-label="Key statistics">
-        <div className="mx-auto grid w-full max-w-7xl grid-cols-2 divide-navy-100 px-4 py-8 sm:px-6 lg:grid-cols-4 lg:divide-x lg:px-8">
+      <section
+        className="border-b border-navy-100 bg-white/90 shadow-[0_-1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm"
+        aria-label="Key statistics"
+      >
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-2 px-4 py-8 sm:px-6 lg:grid-cols-4 lg:px-8">
           {heroStats.map((s, i) => (
+<<<<<<< HEAD
             <Reveal
               key={s.label}
               delay={i * 90}
@@ -230,12 +340,15 @@ export default function Home() {
                 </span>
                 <span className="block text-xs font-medium text-slate-500">{s.label}</span>
               </span>
+=======
+            <Reveal key={s.label} delay={i * 90} className="flex items-center justify-center">
+              <AnimatedStat value={s.value} label={s.label} icon={s.icon} delay={i * 120} />
+>>>>>>> fe45aeb04fe97c141d3cf3e8ed37f4b49e0e32c0
             </Reveal>
           ))}
         </div>
       </section>
 
-      {/* ================= WHAT IS LGS ================= */}
       <section className="bg-navy-50/60 py-16 sm:py-20">
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.15fr] lg:px-8">
           <Reveal variant="left">
@@ -254,6 +367,7 @@ export default function Home() {
               </Btn>
             </div>
           </Reveal>
+
           <div className="grid gap-4 sm:grid-cols-3">
             {pillars.map((p, i) => (
               <Reveal
@@ -276,7 +390,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= PROGRAMS ================= */}
       <section className="py-16 sm:py-20">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="flex flex-wrap items-end justify-between gap-4">
@@ -292,6 +405,7 @@ export default function Home() {
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Reveal>
+
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             {programs.map((p, i) => {
               const Icon = programIcons[p.icon];
@@ -321,7 +435,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= FSF BANNER ================= */}
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal variant="zoom">
           <div className="relative overflow-hidden rounded-2xl bg-navy-950 shadow-xl">
@@ -349,6 +462,7 @@ export default function Home() {
                   </Btn>
                 </div>
               </div>
+
               <p className="shrink-0 -rotate-6 pr-2 font-script text-5xl leading-none text-white/95 sm:text-6xl">
                 Learn
                 <br />
@@ -361,7 +475,6 @@ export default function Home() {
         </Reveal>
       </section>
 
-      {/* ================= OPPORTUNITIES + PLACE FOR YOU ================= */}
       <section className="py-16 sm:py-20">
         <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
           <Reveal variant="left" className="rounded-2xl border-2 border-brand-red/15 bg-white p-6 shadow-sm sm:p-8">
@@ -371,6 +484,7 @@ export default function Home() {
             <h2 className="mt-1.5 font-display text-2xl font-bold text-navy-900">
               Opportunities for Young People
             </h2>
+
             <div className="mt-6 grid grid-cols-2 gap-3.5 sm:grid-cols-3">
               {oppTiles.map((t) => (
                 <Link
@@ -385,6 +499,7 @@ export default function Home() {
                 </Link>
               ))}
             </div>
+
             <div className="mt-6">
               <Btn to="/opportunities" variant="outline" size="sm" arrow>
                 Browse the Hub
@@ -399,6 +514,7 @@ export default function Home() {
             <h2 className="mt-1.5 font-display text-2xl font-bold text-navy-900">
               There is a Place for You at LGS
             </h2>
+
             <div className="mt-6 grid gap-3.5 sm:grid-cols-2">
               {placeCards.map((c) => (
                 <Link
@@ -418,6 +534,7 @@ export default function Home() {
                 </Link>
               ))}
             </div>
+
             <div className="mt-6">
               <Btn to="/join" size="sm" arrow>
                 Join LGS
@@ -427,7 +544,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= LGS IN ACTION + IMPACT ================= */}
       <section className="pb-16 sm:pb-20">
         <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
           <Reveal variant="left">
@@ -450,12 +566,13 @@ export default function Home() {
                   Events | Workshops | Global Engagement
                 </p>
                 <span className="mt-3 inline-flex items-center gap-1.5 font-display text-sm font-semibold text-brand-red">
-                  See What&rsquo;s Happening
+                  See What&apos;s Happening
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </span>
               </div>
             </Link>
           </Reveal>
+
           <Reveal variant="right">
             <Link
               to="/impact"
@@ -483,7 +600,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= STORIES + NEWS ================= */}
       <section className="bg-navy-50/60 py-16 sm:py-20">
         <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.2fr_1fr] lg:px-8">
           <div>
@@ -494,6 +610,7 @@ export default function Home() {
                 subtitle="Real journeys from young changemakers across the LGS network."
               />
             </Reveal>
+
             <div className="mt-7 space-y-4">
               {stories.map((s, i) => (
                 <Reveal
@@ -520,6 +637,7 @@ export default function Home() {
                 </Reveal>
               ))}
             </div>
+
             <Reveal delay={100} className="mt-7">
               <img
                 src={teamImg}
@@ -541,14 +659,10 @@ export default function Home() {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Reveal>
+
             <ul className="mt-7 space-y-3.5">
               {news.map((n, i) => (
-                <Reveal
-                  key={n.title}
-                  as="li"
-                  delay={i * 100}
-                  variant="right"
-                >
+                <Reveal key={n.title} as="li" delay={i * 100} variant="right">
                   <Link
                     to="/events"
                     className="group flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-navy-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:ring-brand-red/30"
@@ -576,10 +690,8 @@ export default function Home() {
               <p className="mt-1.5 text-sm text-navy-100/75">
                 Get opportunities, events and program launches in your inbox.
               </p>
-              <form
-                className="mt-4 flex gap-2"
-                onSubmit={(e) => e.preventDefault()}
-              >
+
+              <form className="mt-4 flex gap-2" onSubmit={(e) => e.preventDefault()}>
                 <label htmlFor="home-email" className="sr-only">
                   Email address
                 </label>
@@ -602,7 +714,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= CTA BAND ================= */}
       <section className="relative overflow-hidden bg-navy-950">
         <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-brand-red via-brand-red/50 to-transparent" />
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-6 px-4 py-12 text-center sm:px-6 md:flex-row md:text-left lg:px-8">
@@ -614,6 +725,7 @@ export default function Home() {
               Join LGS and help build a more inclusive, connected and sustainable world.
             </p>
           </Reveal>
+
           <Reveal variant="right">
             <Btn to="/join" arrow>
               Join LGS
