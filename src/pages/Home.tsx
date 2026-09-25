@@ -104,15 +104,15 @@ const placeCards = [
 
 const stories = [
   {
-    name: "Amina K.",
+    name: "Abdur Rahim",
     role: "Youth Leader",
-    initials: "AK",
+    initials: "Fellowship Alumni",
     color: "bg-brand-red",
     quote:
       "LGS gave me the platform, confidence, and network to turn my ideas into action.",
   },
   {
-    name: "Daniel T.",
+    name: "Abdul Latif",
     role: "Fellowship Alumni",
     initials: "DT",
     color: "bg-navy-800",
@@ -197,53 +197,60 @@ export default function Home() {
   return (
     <>
       <section className="relative isolate overflow-hidden bg-[#071523]">
-        <img
-          src={heroImg}
-          alt="Young leaders raising a flag at sunset"
-          className="absolute inset-0 h-full w-full scale-105 object-cover opacity-60 blur-[0.5px]"
-        />
+        {/** background img*/}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 lg:left-[16%]"></div>
+          <img
+            src={heroImg}
+            alt="Young leaders raising a flag at sunset"
+            className="h-full w-full object-cover object-[58%_46%]"
+            fetchPriority="high"
+          />
+        </div>
 
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.75),transparent_18%),linear-gradient(90deg,rgba(4,15,24,0.96)_0%,rgba(12,21,34,0.84)_32%,rgba(12,21,34,0.42)_62%,rgba(12,21,34,0.58)_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_24%,rgba(9,18,28,0.18))]" />
 
         <div className="relative mx-auto flex min-h-[560px] w-full max-w-[1600px] flex-col justify-center px-4 py-24 sm:px-6 lg:min-h-[620px] lg:px-8">
           <Reveal>
-            <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
-              <Sparkles className="h-3.5 w-3.5 text-brand-red" />
-              Youth-led · Global · Impact-driven
-            </p>
-          </Reveal>
-
-          <Reveal delay={100}>
-            <h1 className="max-w-2xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Youth Today.
-              <br />
-              <span className="text-brand-red">Global Leaders</span>
-              <br />
-              Tomorrow.
-            </h1>
-          </Reveal>
-
-          <Reveal delay={200}>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-navy-100/90 sm:text-lg">
-              Leaders for Global Society is a youth-led global platform empowering young
-              people through leadership, professional development, mentorship, skills,
-              SDGs and access to international opportunities.
-            </p>
-          </Reveal>
-
-          <Reveal delay={300}>
-            <div className="mt-8 flex flex-wrap gap-3.5">
-              <Btn to="/about" arrow>
-                Explore LGS
-              </Btn>
-              <Btn to="/join" variant="white-outline">
-                Join Our Community
-              </Btn>
-            </div>
-          </Reveal>
         </div>
-      </section>
+
+        <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+          <Sparkles className="h-3.5 w-3.5 text-brand-red" />
+          Youth-led · Global · Impact-driven
+        </p>
+      </Reveal>
+
+      <Reveal delay={100}>
+        <h1 className="max-w-2xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+          Youth Today.
+          <br />
+          <span className="text-brand-red">Global Leaders</span>
+          <br />
+          Tomorrow.
+        </h1>
+      </Reveal>
+
+      <Reveal delay={200}>
+        <p className="mt-5 max-w-xl text-base leading-relaxed text-navy-100/90 sm:text-lg">
+          Leaders for Global Society is a youth-led global platform empowering young
+          people through leadership, professional development, mentorship, skills,
+          SDGs and access to international opportunities.
+        </p>
+      </Reveal>
+
+      <Reveal delay={300}>
+        <div className="mt-8 flex flex-wrap gap-3.5">
+          <Btn to="/about" arrow>
+            Explore LGS
+          </Btn>
+          <Btn to="/join" variant="white-outline">
+            Join Our Community
+          </Btn>
+        </div>
+      </Reveal>
+    </div >
+      </section >
 
       <section
         className="border-b border-navy-100 bg-white/90 shadow-[0_-1px_0_rgba(15,23,42,0.05)] backdrop-blur-sm"
