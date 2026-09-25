@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -42,12 +42,65 @@ const programIcons = {
   network: Network,
 };
 
+// Numeric values for animation
 const heroStats = [
-  { value: "15+", label: "Countries", icon: Globe },
-  { value: "3,000+", label: "LinkedIn Family", icon: LinkedinIcon },
-  { value: "5,000+", label: "People Reached", icon: Users },
-  { value: "30+", label: "Team Members", icon: UsersRound },
+  { value: 15, suffix: "+", label: "Countries", icon: Globe },
+  { value: 3000, suffix: "+", label: "LinkedIn Family", icon: LinkedinIcon },
+  { value: 5000, suffix: "+", label: "People Reached", icon: Users },
+  { value: 30, suffix: "+", label: "Team Members", icon: UsersRound },
 ];
+
+// Counter Animation Component (Repeats every time you scroll to it)
+function AnimatedCounter({ end, suffix }: { end: number; suffix: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCount(0);
+          let startTime: number | null = null;
+          const duration = 2000;
+
+          const animateCount = (timestamp: number) => {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            
+            const easeProgress = progress * (2 - progress);
+            const currentCount = Math.floor(easeProgress * end);
+
+            setCount(currentCount);
+
+            if (progress < 1) {
+              requestAnimationFrame(animateCount);
+            } else {
+              setCount(end);
+            }
+          };
+
+          requestAnimationFrame(animateCount);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      if (element) observer.unobserve(element);
+    };
+  }, [end]);
+
+  return (
+    <span ref={ref}>
+      {count.toLocaleString()}{suffix}
+    </span>
+  );
+}
 
 const pillars = [
   {
@@ -196,23 +249,44 @@ function AnimatedStat({ value, label, icon: Icon, delay = 0 }) {
 export default function Home() {
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-[#071523]">
-        {/** background img*/}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 lg:left-[16%]"></div>
-          <img
-            src={heroImg}
-            alt="Young leaders raising a flag at sunset"
-            className="h-full w-full object-cover object-[58%_46%]"
-            fetchPriority="high"
-          />
-        </div>
+            <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+              <Sparkles className="h-3.5 w-3.5 text-brand-red" />
+              Youth-led · Global · Impact-driven
+            </p>
+              <Sparkles className="h-3.5 w-3.5 text-brand-red" />
+              Youth-led · Global · Impact-driven
+            </p>
+          </Reveal>
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.75),transparent_18%),linear-gradient(90deg,rgba(4,15,24,0.96)_0%,rgba(12,21,34,0.84)_32%,rgba(12,21,34,0.42)_62%,rgba(12,21,34,0.58)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent_24%,rgba(9,18,28,0.18))]" />
+          <Reveal delay={100}>
+            <h1 className="max-w-2xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-navy-950 sm:text-5xl lg:text-6xl">
+              Youth Today.
+              <br />
+              <span className="text-brand-red">Global Leaders</span>
+              <br />
+              Tomorrow.
+            </h1>
+          </Reveal>
 
-        <div className="relative mx-auto flex min-h-[560px] w-full max-w-[1600px] flex-col justify-center px-4 py-24 sm:px-6 lg:min-h-[620px] lg:px-8">
-          <Reveal>
+          <Reveal delay={200}>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-700 sm:text-lg">
+              Leaders for Global Society is a youth-led global platform empowering young
+              people through leadership, professional development, mentorship, skills,
+              SDGs and access to international opportunities.
+            </p>
+          </Reveal>
+
+          <Reveal delay={300}>
+            <div className="mt-8 flex flex-wrap gap-3.5">
+              <Btn to="/about" arrow>
+                Explore LGS
+              </Btn>
+              <Btn to="/join" variant="outline">
+                Join Our Community
+              </Btn>
+            </div>
+          </Reveal>
+>>>>>>> 739b4e183347d7f07a515720eb9eea9777f8cea4
         </div>
 
         <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
@@ -258,8 +332,21 @@ export default function Home() {
       >
         <div className="mx-auto grid w-full max-w-7xl grid-cols-2 px-4 py-8 sm:px-6 lg:grid-cols-4 lg:px-8">
           {heroStats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 90} className="flex items-center justify-center">
-              <AnimatedStat value={s.value} label={s.label} icon={s.icon} delay={i * 120} />
+            <Reveal
+              key={s.label}
+              delay={i * 90}
+              className="flex items-center justify-center gap-3.5 px-4 py-3"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy-50 text-navy-800">
+                <s.icon className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block font-display text-2xl font-extrabold text-navy-900">
+                  <AnimatedCounter end={s.value} suffix={s.suffix} />
+                </span>
+                <span className="block text-xs font-medium text-slate-500">{s.label}</span>
+              </span>
+            </Reveal>
             </Reveal>
           ))}
         </div>
