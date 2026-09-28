@@ -284,7 +284,7 @@ export default function Home() {
         </p>
 
         {/* Corner ribbon */}
-        <svg
+        {/* <svg
           viewBox="0 0 300 220"
           className="pointer-events-none absolute -bottom-2 right-0 hidden h-[190px] w-[260px] lg:block"
           aria-hidden="true"
@@ -296,6 +296,36 @@ export default function Home() {
             strokeWidth="30"
             opacity=".95"
           />
+          <path
+            d="M300 58C214 86 152 152 128 222"
+            stroke="#ea1b2d"
+            strokeWidth="10"
+          />
+          <path
+            d="M300 94C232 118 186 170 168 222"
+            stroke="#0b2e63"
+            strokeWidth="7"
+            opacity=".85"
+          />
+        </svg> */}
+
+        <svg
+          viewBox="0 0 300 220"
+          className="pointer-events-none absolute -bottom-2 right-0 hidden h-[190px] w-[260px] lg:block"
+          aria-hidden="true"
+          fill="none"
+        >
+          {/* HIGHLIGHT START: Extended top corner coordinates to cap the gap */}
+          <path
+            d="M300 58C214 86 152 152 128 222"
+            d="M300 94C232 118 186 170 168 222"
+            stroke="#ffffff"
+            strokeWidth="30"
+            strokeLinecap="square"
+            opacity=".95"
+          />
+          {/* HIGHLIGHT END */}
+
           <path
             d="M300 58C214 86 152 152 128 222"
             stroke="#ea1b2d"
