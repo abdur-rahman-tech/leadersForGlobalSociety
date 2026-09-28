@@ -3,19 +3,21 @@ import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import { Btn } from "@/components/ui";
 import { LinkedinIcon } from "@/components/BrandIcons";
-import { timeline } from "@/data";
+import { useData } from "@/store/DataContext";
 import heroImg from "@/assets/hero-network.jpg";
 import sideImg from "@/assets/impact-side.jpg";
 
-const impactStats = [
-  { value: "15+", label: "Countries Reached", icon: Globe },
-  { value: "5,000+", label: "People Engaged", icon: Users },
-  { value: "30+", label: "Programs & Events", icon: CalendarRange },
-  { value: "3,000+", label: "LinkedIn Community", icon: LinkedinIcon },
-  { value: "50+", label: "Ambassadors Trained", icon: UsersRound },
-];
+const statIcons = {
+  globe: Globe,
+  linkedin: LinkedinIcon,
+  users: Users,
+  team: UsersRound,
+  calendar: CalendarRange,
+};
 
 export default function Impact() {
+  const { data } = useData();
+
   return (
     <>
       <PageHero
@@ -29,15 +31,18 @@ export default function Impact() {
       {/* Stats */}
       <section className="border-b border-navy-100 bg-white">
         <div className="mx-auto grid w-full max-w-7xl grid-cols-2 gap-y-6 px-4 py-10 sm:grid-cols-3 sm:px-6 lg:grid-cols-5 lg:px-8">
-          {impactStats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 80} className="flex flex-col items-center gap-2 text-center">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-navy-50 text-navy-800">
-                <s.icon className="h-5 w-5" />
-              </span>
-              <span className="font-display text-2xl font-extrabold text-navy-900">{s.value}</span>
-              <span className="text-xs font-medium text-slate-500">{s.label}</span>
-            </Reveal>
-          ))}
+          {data.stats.map((s, i) => {
+            const Icon = statIcons[s.icon];
+            return (
+              <Reveal key={s.id} delay={i * 80} className="flex flex-col items-center gap-2 text-center">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-navy-50 text-navy-800">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <span className="font-display text-2xl font-extrabold text-navy-900">{s.value}</span>
+                <span className="text-xs font-medium text-slate-500">{s.label}</span>
+              </Reveal>
+            );
+          })}
         </div>
       </section>
 
@@ -54,8 +59,8 @@ export default function Impact() {
               </h2>
             </Reveal>
             <ol className="relative mt-9 space-y-9 border-l-2 border-brand-red/70 pl-8">
-              {timeline.map((t, i) => (
-                <Reveal key={t.year} as="li" delay={i * 110} variant="left" className="relative">
+              {data.timeline.map((t, i) => (
+                <Reveal key={t.id} as="li" delay={i * 110} variant="left" className="relative">
                   <span className="absolute -left-[41px] top-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-brand-red bg-white">
                     <span className="h-2 w-2 rounded-full bg-brand-red" />
                   </span>

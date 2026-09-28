@@ -15,7 +15,8 @@ import {
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import { Pill } from "@/components/ui";
-import { opportunities } from "@/data";
+import { toneForTag } from "@/data";
+import { useData } from "@/store/DataContext";
 import heroImg from "@/assets/hero-opportunities.jpg";
 
 const oppIcons = {
@@ -34,10 +35,11 @@ export default function Opportunities() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All Categories");
   const [location, setLocation] = useState("All Locations");
+  const { data } = useData();
 
   const filtered = useMemo(
     () =>
-      opportunities.filter((o) => {
+      data.opportunities.filter((o) => {
         const q = query.trim().toLowerCase();
         const matchQ =
           !q || o.title.toLowerCase().includes(q) || o.org.toLowerCase().includes(q);
@@ -45,7 +47,7 @@ export default function Opportunities() {
         const matchL = location === "All Locations" || o.location === location;
         return matchQ && matchC && matchL;
       }),
-    [query, category, location]
+    [data.opportunities, query, category, location]
   );
 
   return (
@@ -148,9 +150,9 @@ export default function Opportunities() {
                   </div>
                   <div className="mt-4 flex items-center justify-between gap-3 border-t border-navy-50 pt-4">
                     <div className="flex flex-wrap gap-1.5">
-                      {o.tags.map((t) => (
-                        <Pill key={t.label} tone={t.tone}>
-                          {t.label}
+                      {o.tags.map((tag) => (
+                        <Pill key={tag} tone={toneForTag(tag)}>
+                          {tag}
                         </Pill>
                       ))}
                     </div>

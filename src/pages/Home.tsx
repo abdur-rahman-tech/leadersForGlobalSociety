@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -25,7 +25,8 @@ import {
 import Reveal from "@/components/Reveal";
 import { Btn, Pill, SectionHeading } from "@/components/ui";
 import { LinkedinIcon } from "@/components/BrandIcons";
-import { programs } from "@/data";
+import { avatarColor, initialsOf, programGradients, type StatIcon } from "@/data";
+import { useData } from "@/store/DataContext";
 
 import heroImg from "@/assets/hero-home(1).jpg";
 import fellowshipImg from "@/assets/fellowship.jpg";
@@ -42,65 +43,13 @@ const programIcons = {
   network: Network,
 };
 
-// Numeric values for animation
-const heroStats = [
-  { value: 15, suffix: "+", label: "Countries", icon: Globe },
-  { value: 3000, suffix: "+", label: "LinkedIn Family", icon: LinkedinIcon },
-  { value: 5000, suffix: "+", label: "People Reached", icon: Users },
-  { value: 30, suffix: "+", label: "Team Members", icon: UsersRound },
-];
-
-// Counter Animation Component (Repeats every time you scroll to it)
-function AnimatedCounter({ end, suffix }: { end: number; suffix: string }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setCount(0);
-          let startTime: number | null = null;
-          const duration = 2000;
-
-          const animateCount = (timestamp: number) => {
-            if (!startTime) startTime = timestamp;
-            const progress = Math.min((timestamp - startTime) / duration, 1);
-
-            const easeProgress = progress * (2 - progress);
-            const currentCount = Math.floor(easeProgress * end);
-
-            setCount(currentCount);
-
-            if (progress < 1) {
-              requestAnimationFrame(animateCount);
-            } else {
-              setCount(end);
-            }
-          };
-
-          requestAnimationFrame(animateCount);
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    observer.observe(element);
-
-    return () => {
-      if (element) observer.unobserve(element);
-    };
-  }, [end]);
-
-  return (
-    <span ref={ref}>
-      {count.toLocaleString()}{suffix}
-    </span>
-  );
-}
+const statIcons: Record<StatIcon, ComponentType<{ className?: string }>> = {
+  globe: Globe,
+  linkedin: LinkedinIcon,
+  users: Users,
+  team: UsersRound,
+  calendar: CalendarDays,
+};
 
 const pillars = [
   {
@@ -155,52 +104,17 @@ const placeCards = [
   },
 ];
 
-const stories = [
-  {
-    name: "Abdur Rahim",
-    role: "Youth Leader",
-    initials: "Fellowship Alumni",
-    color: "bg-brand-red",
-    quote:
-      "LGS gave me the platform, confidence, and network to turn my ideas into action.",
-  },
-  {
-    name: "Abdul Latif",
-    role: "Fellowship Alumni",
-    initials: "DT",
-    color: "bg-navy-800",
-    quote:
-      "The mentorship and exposure I got through LGS changed the way I see leadership and impact.",
-  },
-  {
-    name: "Sara M.",
-    role: "Community Builder",
-    initials: "SM",
-    color: "bg-brand-blue",
-    quote:
-      "I found my people here, and together we created something meaningful for our community.",
-  },
-];
-
-const news = [
-  {
-    tag: "Event",
-    date: "Apr 2026",
-    title: "Youth leadership summit opens registration for this season.",
-  },
-  {
-    tag: "Impact",
-    date: "Mar 2026",
-    title: "LGS members launched a regional outreach project across campuses.",
-  },
-  {
-    tag: "Program",
-    date: "Feb 2026",
-    title: "New fellowship cohort begins with mentorship and skill labs.",
-  },
-];
-
-function AnimatedStat({ value, label, icon: Icon, delay = 0 }) {
+function AnimatedStat({
+  value,
+  label,
+  icon: Icon,
+  delay = 0,
+}: {
+  value: string;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+  delay?: number;
+}) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -247,6 +161,8 @@ function AnimatedStat({ value, label, icon: Icon, delay = 0 }) {
 }
 
 export default function Home() {
+  const { data } = useData();
+
   return (
     <>
       <section
@@ -317,7 +233,6 @@ export default function Home() {
         >
           {/* HIGHLIGHT START: Extended top corner coordinates to cap the gap */}
           <path
-            d="M300 58C214 86 152 152 128 222"
             d="M300 94C232 118 186 170 168 222"
             stroke="#ffffff"
             strokeWidth="30"
@@ -401,23 +316,18 @@ export default function Home() {
         aria-label="Key statistics"
       >
         <div className="mx-auto grid w-full max-w-7xl grid-cols-2 px-4 py-8 sm:px-6 lg:grid-cols-4 lg:px-8">
-          {heroStats.map((s, i) => (
+          {data.stats.slice(0, 4).map((stat, i) => (
             <Reveal
-              key={s.label}
+              key={stat.id}
               delay={i * 90}
-              className="flex items-center justify-center gap-3.5 border-r border-[#cddceb] px-4 py-3 last:border-r-0"
+              className="border-r border-[#cddceb] last:border-r-0"
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/70 text-navy-800 shadow-sm">
-                <s.icon className="h-5 w-5" />
-              </span>
-              <span>
-                <span className="block font-display text-2xl font-extrabold text-navy-900">
-                  <AnimatedCounter end={s.value} suffix={s.suffix} />
-                </span>
-                <span className="block text-xs font-medium text-slate-500">
-                  {s.label}
-                </span>
-              </span>
+              <AnimatedStat
+                value={stat.value}
+                label={stat.label}
+                icon={statIcons[stat.icon]}
+                delay={i * 90}
+              />
             </Reveal>
           ))}
         </div>
@@ -481,13 +391,13 @@ export default function Home() {
           </Reveal>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            {programs.map((p, i) => {
+            {data.programs.map((p, i) => {
               const Icon = programIcons[p.icon];
               return (
-                <Reveal key={p.slug} delay={i * 70} variant="zoom">
+                <Reveal key={p.id} delay={i * 70} variant="zoom">
                   <Link
                     to="/programs"
-                    className={`group flex h-full min-h-[190px] flex-col justify-between rounded-xl bg-gradient-to-br ${p.color} p-5 text-white shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
+                    className={`group flex h-full min-h-[190px] flex-col justify-between rounded-xl bg-gradient-to-br ${programGradients[p.color]} p-5 text-white shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
                   >
                     <div>
                       <Icon className="h-6 w-6 opacity-90 transition-transform duration-300 group-hover:scale-110" />
@@ -524,11 +434,10 @@ export default function Home() {
                   Featured Program
                 </p>
                 <h2 className="mt-2 font-display text-3xl font-extrabold text-white sm:text-4xl">
-                  Future Skills Fellowship
+                  {data.programs[0]?.title ?? "Future Skills Fellowship"}
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-navy-100/85 sm:text-base">
-                  A 6-week program helping young people build practical skills, leadership
-                  capacity and a global mindset.
+                  {data.programs[0]?.blurb ?? "A 6-week program helping young people build practical skills, leadership capacity and a global mindset."}
                 </p>
                 <div className="mt-6">
                   <Btn to="/programs" arrow>
@@ -686,9 +595,9 @@ export default function Home() {
             </Reveal>
 
             <div className="mt-7 space-y-4">
-              {stories.map((s, i) => (
+              {data.stories.map((s, i) => (
                 <Reveal
-                  key={s.name}
+                  key={s.id}
                   delay={i * 120}
                   className="rounded-xl border-l-4 border-brand-red bg-white p-6 shadow-sm transition-shadow duration-300 hover:shadow-lg"
                 >
@@ -697,9 +606,9 @@ export default function Home() {
                   </p>
                   <div className="mt-4 flex items-center gap-3">
                     <span
-                      className={`flex h-10 w-10 items-center justify-center rounded-full ${s.color} font-display text-sm font-bold text-white`}
+                      className={`flex h-10 w-10 items-center justify-center rounded-full ${avatarColor(s.name)} font-display text-sm font-bold text-white`}
                     >
-                      {s.initials}
+                      {initialsOf(s.name)}
                     </span>
                     <span>
                       <span className="block font-display text-sm font-bold text-navy-900">
@@ -735,8 +644,8 @@ export default function Home() {
             </Reveal>
 
             <ul className="mt-7 space-y-3.5">
-              {news.map((n, i) => (
-                <Reveal key={n.title} as="li" delay={i * 100} variant="right">
+              {data.news.map((n, i) => (
+                <Reveal key={n.id} as="li" delay={i * 100} variant="right">
                   <Link
                     to="/events"
                     className="group flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-navy-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:ring-brand-red/30"

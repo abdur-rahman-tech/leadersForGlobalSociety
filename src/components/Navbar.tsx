@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, Search, X, ShieldCheck } from "lucide-react";
 import Logo from "./Logo";
 import { Btn } from "./ui";
 import { cn } from "@/utils/cn";
@@ -68,6 +68,15 @@ export default function Navbar() {
           >
             <Search className="h-[18px] w-[18px]" />
           </button>
+          <Link
+            to="/admin"
+            aria-label="Open admin panel"
+            title="Admin Panel"
+            className="hidden h-9 items-center gap-1.5 rounded-full border border-navy-200 px-3.5 text-navy-800 transition-colors hover:border-brand-red hover:bg-red-50 hover:text-brand-red sm:flex"
+          >
+            <ShieldCheck className="h-[18px] w-[18px]" />
+            <span className="font-display text-[13px] font-semibold">Admin</span>
+          </Link>
           <Btn to="/join" size="sm" className="hidden sm:inline-flex">
             Join LGS
           </Btn>

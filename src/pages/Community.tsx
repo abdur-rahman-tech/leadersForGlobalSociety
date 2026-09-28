@@ -3,7 +3,8 @@ import { MapPin, Search } from "lucide-react";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import { Btn, Pill } from "@/components/ui";
-import { members, type Member } from "@/data";
+import { avatarColor, initialsOf } from "@/data";
+import { useData } from "@/store/DataContext";
 import { cn } from "@/utils/cn";
 import heroImg from "@/assets/hero-join.jpg";
 import teamImg from "@/assets/team-photo.jpg";
@@ -13,10 +14,11 @@ const tabs = ["All", "Ambassadors", "Fellows", "Alumni", "Volunteers"] as const;
 export default function Community() {
   const [tab, setTab] = useState<(typeof tabs)[number]>("All");
   const [query, setQuery] = useState("");
+  const { data } = useData();
 
   const filtered = useMemo(
     () =>
-      members.filter((m: Member) => {
+      data.members.filter((m) => {
         const q = query.trim().toLowerCase();
         const matchQ =
           !q ||
@@ -25,7 +27,7 @@ export default function Community() {
           m.role.toLowerCase().includes(q);
         return (tab === "All" || m.group === tab) && matchQ;
       }),
-    [tab, query]
+    [data.members, tab, query]
   );
 
   return (
@@ -75,7 +77,7 @@ export default function Community() {
           <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((m, i) => (
               <Reveal
-                key={m.name}
+                key={m.id}
                 delay={(i % 3) * 90}
                 variant="zoom"
                 className="group rounded-2xl border border-navy-100 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-navy-900/10"
@@ -83,10 +85,10 @@ export default function Community() {
                 <span
                   className={cn(
                     "mx-auto flex h-16 w-16 items-center justify-center rounded-full font-display text-lg font-bold text-white shadow-md ring-4 ring-white transition-transform duration-300 group-hover:scale-110",
-                    m.color
+                    avatarColor(m.name)
                   )}
                 >
-                  {m.initials}
+                  {initialsOf(m.name)}
                 </span>
                 <h2 className="mt-4 font-display text-base font-bold text-navy-900">{m.name}</h2>
                 <p className="mt-0.5 flex items-center justify-center gap-1 text-xs text-slate-500">

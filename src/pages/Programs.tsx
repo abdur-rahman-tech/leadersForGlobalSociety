@@ -9,7 +9,8 @@ import {
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import { Btn } from "@/components/ui";
-import { programs } from "@/data";
+import { programAccents } from "@/data";
+import { useData } from "@/store/DataContext";
 import heroImg from "@/assets/hero-programs.jpg";
 import fellowshipImg from "@/assets/fellowship.jpg";
 
@@ -22,16 +23,9 @@ const icons = {
   network: Network,
 };
 
-const accents: Record<string, { chip: string; icon: string }> = {
-  "future-skills-fellowship": { chip: "bg-navy-50 ring-navy-100", icon: "text-navy-800" },
-  "leadership-development": { chip: "bg-red-50 ring-red-100", icon: "text-brand-red" },
-  "global-opportunities": { chip: "bg-blue-50 ring-blue-100", icon: "text-blue-700" },
-  "sdgs-global-citizenship": { chip: "bg-emerald-50 ring-emerald-100", icon: "text-emerald-700" },
-  "policy-awareness": { chip: "bg-violet-50 ring-violet-100", icon: "text-violet-700" },
-  "mentorship-networking": { chip: "bg-sky-50 ring-sky-100", icon: "text-sky-700" },
-};
-
 export default function Programs() {
+  const { data } = useData();
+
   return (
     <>
       <PageHero
@@ -44,12 +38,12 @@ export default function Programs() {
       {/* Program grid */}
       <section className="py-16 sm:py-20">
         <div className="mx-auto grid w-full max-w-7xl gap-5 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-8">
-          {programs.map((p, i) => {
+          {data.programs.map((p, i) => {
             const Icon = icons[p.icon];
-            const accent = accents[p.slug];
+            const accent = programAccents[p.color];
             return (
               <Reveal
-                key={p.slug}
+                key={p.id}
                 delay={(i % 3) * 100}
                 className="group flex flex-col rounded-2xl border border-navy-100 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-navy-200 hover:shadow-xl hover:shadow-navy-900/10"
               >

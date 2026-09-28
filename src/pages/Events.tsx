@@ -3,13 +3,16 @@ import { CalendarDays, MapPin } from "lucide-react";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import { Btn } from "@/components/ui";
-import { events, pastEvents } from "@/data";
+import { useData } from "@/store/DataContext";
 import { cn } from "@/utils/cn";
 import heroImg from "@/assets/hero-events.jpg";
 
 export default function Events() {
   const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
-  const list = tab === "upcoming" ? events : pastEvents;
+  const { data } = useData();
+  const list = data.events.filter((event) =>
+    tab === "upcoming" ? event.status === "Upcoming" : event.status === "Past"
+  );
 
   return (
     <>
@@ -63,47 +66,50 @@ export default function Events() {
 
           {/* Event list */}
           <div className="mt-8 space-y-5" key={tab}>
-            {list.map((e, i) => (
-              <Reveal
-                key={e.title}
-                delay={i * 100}
-                className="group flex flex-col gap-5 rounded-2xl border border-navy-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-navy-200 hover:shadow-lg hover:shadow-navy-900/8 sm:flex-row sm:items-center"
-              >
-                <div
-                  className={cn(
-                    "flex w-24 shrink-0 flex-col items-center rounded-xl px-4 py-3 text-white shadow-md",
-                    e.past ? "bg-slate-500" : "bg-navy-900"
-                  )}
+            {list.map((e, i) => {
+              const isPast = e.status === "Past";
+              return (
+                <Reveal
+                  key={e.id}
+                  delay={i * 100}
+                  className="group flex flex-col gap-5 rounded-2xl border border-navy-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-navy-200 hover:shadow-lg hover:shadow-navy-900/8 sm:flex-row sm:items-center"
                 >
-                  <span className="font-display text-[11px] font-bold uppercase tracking-widest text-white/80">
-                    {e.month}
-                  </span>
-                  <span className="font-display text-3xl font-extrabold leading-none">
-                    {e.day}
-                  </span>
-                  <span className="mt-1 text-[11px] font-medium text-white/70">{e.year}</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h2 className="font-display text-lg font-bold text-navy-900">{e.title}</h2>
-                  <p className="mt-1 flex items-center gap-1.5 text-[13px] font-semibold text-brand-red">
-                    <MapPin className="h-3.5 w-3.5" />
-                    {e.meta}
-                  </p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{e.blurb}</p>
-                </div>
-                <div className="shrink-0">
-                  {e.past ? (
-                    <Btn href="#" variant="outline" size="sm">
-                      View Recap
-                    </Btn>
-                  ) : (
-                    <Btn href="#" size="sm" arrow>
-                      Register Now
-                    </Btn>
-                  )}
-                </div>
-              </Reveal>
-            ))}
+                  <div
+                    className={cn(
+                      "flex w-24 shrink-0 flex-col items-center rounded-xl px-4 py-3 text-white shadow-md",
+                      isPast ? "bg-slate-500" : "bg-navy-900"
+                    )}
+                  >
+                    <span className="font-display text-[11px] font-bold uppercase tracking-widest text-white/80">
+                      {e.month}
+                    </span>
+                    <span className="font-display text-3xl font-extrabold leading-none">
+                      {e.day}
+                    </span>
+                    <span className="mt-1 text-[11px] font-medium text-white/70">{e.year}</span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="font-display text-lg font-bold text-navy-900">{e.title}</h2>
+                    <p className="mt-1 flex items-center gap-1.5 text-[13px] font-semibold text-brand-red">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {e.meta}
+                    </p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{e.blurb}</p>
+                  </div>
+                  <div className="shrink-0">
+                    {isPast ? (
+                      <Btn href="#" variant="outline" size="sm">
+                        View Recap
+                      </Btn>
+                    ) : (
+                      <Btn href="#" size="sm" arrow>
+                        Register Now
+                      </Btn>
+                    )}
+                  </div>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
