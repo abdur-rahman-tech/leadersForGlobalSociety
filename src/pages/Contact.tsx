@@ -1,15 +1,10 @@
+import { useState } from "react";
 import { Building2, HelpCircle, Mail, MapPin, Users } from "lucide-react";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import { Btn } from "@/components/ui";
-import {
-  FacebookIcon,
-  InstagramIcon,
-  LinkedinIcon,
-  XIcon,
-  YoutubeIcon,
-} from "@/components/BrandIcons";
 import heroImg from "@/assets/hero-network.jpg";
+import { emailDraftHref } from "@/utils/email";
 
 const helpCards = [
   {
@@ -32,15 +27,20 @@ const helpCards = [
   },
 ];
 
-const socials = [
-  { label: "LinkedIn", icon: LinkedinIcon },
-  { label: "Instagram", icon: InstagramIcon },
-  { label: "Facebook", icon: FacebookIcon },
-  { label: "YouTube", icon: YoutubeIcon },
-  { label: "X (Twitter)", icon: XIcon },
-];
-
 export default function Contact() {
+  const [formNotice, setFormNotice] = useState("");
+
+  const submitContact = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const fields = new FormData(event.currentTarget);
+    const name = String(fields.get("name") ?? "");
+    const email = String(fields.get("email") ?? "");
+    const subject = String(fields.get("subject") ?? "") || `Website message from ${name}`;
+    const message = String(fields.get("message") ?? "");
+    window.location.href = emailDraftHref(subject, `Name: ${name}\nEmail: ${email}\n\n${message}`);
+    setFormNotice("Your email app should open with this message ready to send. It is not sent until you press Send.");
+  };
+
   return (
     <>
       <PageHero
@@ -124,33 +124,18 @@ export default function Contact() {
               </li>
             </ul>
 
-            <h3 className="mt-9 font-display text-sm font-bold uppercase tracking-wider text-navy-900">
-              Follow Us
-            </h3>
-            <ul className="mt-4 flex flex-wrap gap-2.5">
-              {socials.map((s) => (
-                <li key={s.label}>
-                  <a
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    aria-label={s.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-navy-800 shadow-sm ring-1 ring-navy-100 transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-red hover:text-white hover:ring-brand-red"
-                  >
-                    <s.icon className="h-4 w-4" />
-                  </a>
-                </li>
-              ))}
-            </ul>
           </Reveal>
 
           <Reveal variant="right" className="rounded-2xl border border-navy-100 bg-white p-6 shadow-lg shadow-navy-900/5 sm:p-8">
             <h2 className="font-display text-xl font-bold text-navy-900">Send Us a Message</h2>
-            <form className="mt-5 grid gap-4 sm:grid-cols-2" onSubmit={(e) => e.preventDefault()}>
+            <form className="mt-5 grid gap-4 sm:grid-cols-2" onSubmit={submitContact}>
               <label className="block">
                 <span className="mb-1.5 block text-xs font-semibold text-navy-900">Name</span>
                 <input
                   required
                   type="text"
+                  name="name"
+                  autoComplete="name"
                   placeholder="Your name"
                   className="w-full rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm focus:border-navy-400 focus:bg-white focus:outline-none"
                 />
@@ -160,6 +145,8 @@ export default function Contact() {
                 <input
                   required
                   type="email"
+                  name="email"
+                  autoComplete="email"
                   placeholder="you@email.com"
                   className="w-full rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm focus:border-navy-400 focus:bg-white focus:outline-none"
                 />
@@ -168,6 +155,7 @@ export default function Contact() {
                 <span className="mb-1.5 block text-xs font-semibold text-navy-900">Subject</span>
                 <input
                   type="text"
+                  name="subject"
                   placeholder="What's this about?"
                   className="w-full rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm focus:border-navy-400 focus:bg-white focus:outline-none"
                 />
@@ -177,15 +165,17 @@ export default function Contact() {
                 <textarea
                   rows={5}
                   required
+                  name="message"
                   placeholder="Write your message..."
                   className="w-full resize-none rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm focus:border-navy-400 focus:bg-white focus:outline-none"
                 />
               </label>
               <div className="sm:col-span-2">
-                <Btn href="#contact-form" arrow className="w-full sm:w-auto">
+                <Btn type="submit" arrow className="w-full sm:w-auto">
                   Send Message
                 </Btn>
               </div>
+              {formNotice && <p role="status" className="text-xs leading-relaxed text-emerald-700 sm:col-span-2">{formNotice}</p>}
             </form>
           </Reveal>
         </div>

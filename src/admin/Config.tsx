@@ -16,7 +16,7 @@ import { Pill } from "@/components/ui";
 export type FieldDef = {
     name: string;
     label: string;
-    type: "text" | "textarea" | "select" | "tags" | "image";
+    type: "text" | "textarea" | "select" | "tags" | "image" | "url";
     options?: { value: string; label: string }[];
     required?: boolean;
     placeholder?: string;
@@ -60,6 +60,7 @@ export const collections: CollectionConfig[] = [
             { name: "blurb", label: "Description", type: "textarea", required: true },
             { name: "status", label: "Status", type: "select", required: true, options: opt(["Upcoming", "Past"]) },
             { name: "image", label: "Event image", type: "image", hint: "Upload an image or paste an image URL. Uploads are optimized for browser storage." },
+            { name: "linkedinUrl", label: "LinkedIn event link", type: "url", placeholder: "https://www.linkedin.com/events/...", hint: "Optional. Add the public LinkedIn event announcement." },
         ],
         columns: [
             {
@@ -82,6 +83,7 @@ export const collections: CollectionConfig[] = [
                     <Pill tone={e.status === "Upcoming" ? "green" : "slate"}>{String(e.status)}</Pill>
                 ),
             },
+            { header: "LinkedIn", render: (e) => e.linkedinUrl ? <Pill tone="blue">Added</Pill> : <span className="text-xs text-slate-400">None</span> },
         ],
     },
     {
@@ -203,6 +205,7 @@ export const collections: CollectionConfig[] = [
             { name: "country", label: "Country", type: "text", required: true },
             { name: "role", label: "Role / Program", type: "text", required: true },
             { name: "image", label: "Profile image", type: "image", hint: "Upload an image or paste an image URL. Uploads are optimized for browser storage." },
+            { name: "linkedinUrl", label: "LinkedIn profile link", type: "url", placeholder: "https://www.linkedin.com/in/...", hint: "Optional. Add this member's public LinkedIn profile." },
             {
                 name: "group",
                 label: "Group",
@@ -220,6 +223,7 @@ export const collections: CollectionConfig[] = [
             { header: "Country", render: (m) => String(m.country) },
             { header: "Role", render: (m) => String(m.role) },
             { header: "Group", render: (m) => <Pill tone="blue">{String(m.group)}</Pill> },
+            { header: "LinkedIn", render: (m) => m.linkedinUrl ? <Pill tone="blue">Added</Pill> : <span className="text-xs text-slate-400">None</span> },
         ],
     },
     {

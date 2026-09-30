@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
-import { MapPin, Search } from "lucide-react";
+import { ExternalLink, MapPin, Search } from "lucide-react";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import { Btn, Pill } from "@/components/ui";
+import { LinkedinIcon } from "@/components/BrandIcons";
 import { avatarColor, initialsOf } from "@/data";
 import { useData } from "@/store/DataContext";
+import { linkedinHref } from "@/utils/linkedin";
 import { cn } from "@/utils/cn";
 import heroImg from "@/assets/hero-join.jpg";
 import teamImg from "@/assets/team-photo.jpg";
@@ -65,6 +67,7 @@ export default function Community() {
               <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
                 type="search"
+                aria-label="Search members by name, country, or role"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search members..."
@@ -73,6 +76,11 @@ export default function Community() {
             </label>
           </Reveal>
 
+          <p className="mt-4 text-xs text-slate-500" aria-live="polite">
+            Showing {filtered.length} {filtered.length === 1 ? "member" : "members"}
+            {tab !== "All" ? ` in ${tab}` : ""}
+          </p>
+
           {/* Members */}
           <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((m, i) => (
@@ -80,26 +88,36 @@ export default function Community() {
                 key={m.id}
                 delay={(i % 3) * 90}
                 variant="zoom"
-                className="group rounded-2xl border border-navy-100 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-navy-900/10"
+                as="article"
+                className="group flex h-full flex-col rounded-xl border border-navy-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-navy-200 hover:shadow-lg hover:shadow-navy-900/8 sm:p-6"
               >
-                <span
-                  className={cn(
-                    "mx-auto flex h-16 w-16 items-center justify-center rounded-full font-display text-lg font-bold text-white shadow-md ring-4 ring-white transition-transform duration-300 group-hover:scale-110",
-                    "overflow-hidden",
-                    avatarColor(m.name)
-                  )}
-                >
-                  {m.image ? <img src={m.image} alt="" className="h-full w-full object-cover" /> : initialsOf(m.name)}
-                </span>
-                <h2 className="mt-4 font-display text-base font-bold text-navy-900">{m.name}</h2>
-                <p className="mt-0.5 flex items-center justify-center gap-1 text-xs text-slate-500">
-                  <MapPin className="h-3 w-3" />
-                  {m.country}
-                </p>
-                <div className="mt-3 flex items-center justify-center gap-1.5">
-                  <Pill tone="blue">{m.group.replace(/s$/, "")}</Pill>
-                  <Pill tone="slate">{m.role}</Pill>
+                <div className="flex items-center gap-4">
+                  <div className={cn("flex h-[4.5rem] w-[4.5rem] shrink-0 items-center justify-center overflow-hidden rounded-full font-display text-lg font-bold text-white ring-2 ring-navy-100 ring-offset-2", avatarColor(m.name))}>
+                    {m.image ? <img src={m.image} alt={`${m.name} profile`} className="h-full w-full object-cover" /> : initialsOf(m.name)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <Pill tone="blue">{m.group.replace(/s$/, "")}</Pill>
+                    <h2 className="mt-1.5 truncate font-display text-lg font-bold text-navy-950">{m.name}</h2>
+                    <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+                      <MapPin className="h-3.5 w-3.5 shrink-0 text-brand-red" aria-hidden="true" />
+                      <span className="truncate">{m.country}</span>
+                    </p>
+                  </div>
                 </div>
+                <p className="mt-5 flex-1 border-t border-slate-100 pt-4 text-sm leading-relaxed text-slate-600">{m.role}</p>
+                {linkedinHref(m.linkedinUrl) && (
+                  <a
+                    href={linkedinHref(m.linkedinUrl)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`View ${m.name}'s LinkedIn profile (opens in a new tab)`}
+                    className="mt-4 inline-flex min-h-10 items-center justify-center gap-2 self-start rounded-md bg-[#0a66c2]/8 px-3 text-sm font-semibold text-[#0a66c2] transition-colors hover:bg-[#0a66c2]/15"
+                  >
+                    <LinkedinIcon className="h-4 w-4" />
+                    LinkedIn profile
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
               </Reveal>
             ))}
           </div>

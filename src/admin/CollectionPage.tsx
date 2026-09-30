@@ -189,7 +189,7 @@ function ItemModal({
                                 </select>
                             ) : (
                                 <input
-                                    type="text"
+                                    type={f.type === "url" ? "url" : "text"}
                                     required={f.required}
                                     value={form[f.name]}
                                     placeholder={f.placeholder}

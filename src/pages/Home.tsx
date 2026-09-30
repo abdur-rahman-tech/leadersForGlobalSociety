@@ -6,7 +6,6 @@ import {
   BookOpen,
   Briefcase,
   CalendarDays,
-  ChevronRight,
   GraduationCap,
   Globe,
   Handshake,
@@ -27,6 +26,7 @@ import { Btn, Pill, SectionHeading } from "@/components/ui";
 import { LinkedinIcon } from "@/components/BrandIcons";
 import { avatarColor, initialsOf, programGradients, type StatIcon } from "@/data";
 import { useData } from "@/store/DataContext";
+import { emailDraftHref } from "@/utils/email";
 
 import heroImg from "@/assets/hero-home(1).jpg";
 import fellowshipImg from "@/assets/fellowship.jpg";
@@ -119,12 +119,17 @@ function AnimatedStat({
 
   useEffect(() => {
     const target = Number(String(value).replace(/[^0-9]/g, ""));
-    const start = performance.now();
-    let frameId;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setCount(target);
+      return;
+    }
 
-    const animate = (time) => {
-      const progress = Math.min((time - start) / 1400, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
+    const start = performance.now();
+    let frameId: number;
+
+    const animate = (time: number) => {
+      const progress = Math.min((time - start) / 2600, 1);
+      const eased = progress * progress * (3 - 2 * progress);
       const next = Math.round(target * eased);
       setCount(next);
 
@@ -150,10 +155,11 @@ function AnimatedStat({
       </span>
 
       <span>
-        <span className="block font-display text-2xl font-extrabold text-navy-900 sm:text-[2rem]">
-          {count}
-          {String(value).includes("+") ? "+" : ""}
+        <span aria-hidden="true" className="block font-display text-2xl font-extrabold text-brand-red sm:text-[2rem]">
+          {new Intl.NumberFormat("en-US").format(count)}
+          {String(value).trim().endsWith("+") ? "+" : ""}
         </span>
+        <span className="sr-only">{value}</span>
         <span className="block text-xs font-medium text-slate-500">{label}</span>
       </span>
     </div>
@@ -162,6 +168,7 @@ function AnimatedStat({
 
 export default function Home() {
   const { data } = useData();
+  const [newsletterNotice, setNewsletterNotice] = useState("");
 
   return (
     <>
@@ -586,8 +593,8 @@ export default function Home() {
       </section>
 
       <section className="bg-navy-50/60 py-16 sm:py-20">
-        <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.2fr_1fr] lg:px-8">
-          <div>
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:px-8">
+          <div className="min-w-0">
             <Reveal>
               <SectionHeading
                 eyebrow="Testimonials"
@@ -633,14 +640,14 @@ export default function Home() {
             </Reveal>
           </div>
 
-          <div>
-            <Reveal className="flex items-end justify-between gap-4">
+          <div className="min-w-0">
+            <Reveal className="flex min-w-0 items-end justify-between gap-4">
               <SectionHeading eyebrow="Latest News" title="What's Happening at LGS" />
               <Link
                 to="/events"
                 className="group inline-flex shrink-0 items-center gap-1 pb-1 font-display text-sm font-semibold text-brand-red hover:text-brand-red-dark"
               >
-                View All
+                Explore Events
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Reveal>
@@ -648,15 +655,12 @@ export default function Home() {
             <ul className="mt-7 space-y-3.5">
               {data.news.map((n, i) => (
                 <Reveal key={n.id} as="li" delay={i * 100} variant="right">
-                  <Link
-                    to="/events"
-                    className="group flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-navy-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:ring-brand-red/30"
-                  >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-50 text-navy-800 transition-colors group-hover:bg-brand-red group-hover:text-white">
+                  <article className="flex min-w-0 items-center gap-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-navy-100">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-50 text-navy-800">
                       <Newspaper className="h-4.5 w-4.5" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="flex items-center gap-2">
+                      <span className="flex flex-wrap items-center gap-2">
                         <Pill tone="red">{n.tag}</Pill>
                         <span className="text-[11px] font-medium text-slate-400">{n.date}</span>
                       </span>
@@ -664,36 +668,43 @@ export default function Home() {
                         {n.title}
                       </span>
                     </span>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-brand-red" />
-                  </Link>
+                  </article>
                 </Reveal>
               ))}
             </ul>
 
             <Reveal delay={150} className="mt-7 rounded-xl bg-navy-900 p-6 text-white shadow-lg">
-              <h3 className="font-display text-lg font-bold">Never miss an update</h3>
+              <h3 className="font-display text-lg font-bold">Get LGS updates</h3>
               <p className="mt-1.5 text-sm text-navy-100/75">
-                Get opportunities, events and program launches in your inbox.
+                Email our team to request opportunities, event and program updates.
               </p>
 
-              <form className="mt-4 flex gap-2" onSubmit={(e) => e.preventDefault()}>
+              <form className="mt-4 flex flex-col gap-2 sm:flex-row" onSubmit={(event) => {
+                event.preventDefault();
+                const email = new FormData(event.currentTarget).get("email");
+                window.location.href = emailDraftHref("Request LGS email updates", `Please add this address to the LGS updates list: ${String(email ?? "")}`);
+                setNewsletterNotice("Your email app should open with a request ready to send.");
+              }}>
                 <label htmlFor="home-email" className="sr-only">
                   Email address
                 </label>
                 <input
                   id="home-email"
+                  name="email"
                   type="email"
                   required
+                  autoComplete="email"
                   placeholder="you@email.com"
                   className="min-w-0 flex-1 rounded-md border border-white/20 bg-white/10 px-3.5 py-2.5 text-sm text-white placeholder:text-navy-100/50 focus:border-brand-red focus:outline-none"
                 />
                 <button
                   type="submit"
-                  className="rounded-md bg-brand-red px-4 py-2.5 font-display text-sm font-semibold text-white transition-colors hover:bg-brand-red-dark"
+                  className="min-h-11 rounded-md bg-brand-red px-4 py-2.5 font-display text-sm font-semibold text-white transition-colors hover:bg-brand-red-dark"
                 >
-                  Subscribe
+                  Request Updates
                 </button>
               </form>
+              {newsletterNotice && <p role="status" className="mt-2 text-xs text-emerald-200">{newsletterNotice}</p>}
             </Reveal>
           </div>
         </div>

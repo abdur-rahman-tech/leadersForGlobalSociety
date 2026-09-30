@@ -113,8 +113,7 @@ function Dashboard() {
                 <div>
                     <h1 className="font-display text-2xl font-extrabold text-navy-950">Dashboard</h1>
                     <p className="mt-1 text-sm text-slate-500">
-                        Manage everything shown on the LGS website. Changes save automatically and appear
-                        on the live site instantly.
+                        Manage the content shown on this website. Changes are saved in this browser.
                     </p>
                 </div>
                 {arm ? (
@@ -174,12 +173,11 @@ function Dashboard() {
             </div>
 
             <div className="mt-7 rounded-2xl border border-navy-100 bg-navy-50/60 p-5 text-sm text-navy-800">
-                <p className="font-display font-bold">💡 How it works</p>
+                <p className="font-display font-bold">Where your changes are saved</p>
                 <p className="mt-1.5 leading-relaxed text-navy-700">
-                    All content is stored in your browser (localStorage) and merged with the site
-                    defaults. Add, edit or delete records in any section — the public pages read from
-                    the same store, so your changes show up immediately. Use{" "}
-                    <strong>Reset to Defaults</strong> to restore the original content at any time.
+                    Content is stored only in this browser and appears on this device. It does not
+                    sync to other visitors or publish to a server. Use <strong>Reset to Defaults</strong>{" "}
+                    to restore the original content.
                 </p>
             </div>
         </div>

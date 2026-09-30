@@ -22,30 +22,41 @@ function ScrollToTop() {
   return null;
 }
 
+function AppLayout() {
+  const { pathname } = useLocation();
+  const showPublicChrome = !pathname.startsWith("/admin");
+
+  return (
+    <>
+      <ScrollToTop />
+      <div className="flex min-h-screen flex-col">
+        {showPublicChrome && <Navbar />}
+        <main className="flex-1">
+          <Routes>
+            <Route path="/admin/*" element={<AdminApp />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/programs" element={<Programs />} />
+            <Route path="/opportunities" element={<Opportunities />} />
+            <Route path="/join" element={<Join />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/impact" element={<Impact />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </main>
+        {showPublicChrome && <Footer />}
+      </div>
+    </>
+  );
+}
+
 export default function App() {
   return (
     <DataProvider>
       <HashRouter>
-        <ScrollToTop />
-        <div className="flex min-h-screen flex-col">
-          <Navbar />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/admin/*" element={<AdminApp />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/programs" element={<Programs />} />
-              <Route path="/opportunities" element={<Opportunities />} />
-              <Route path="/join" element={<Join />} />
-              <Route path="/community" element={<Community />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/impact" element={<Impact />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="*" element={<Home />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <AppLayout />
       </HashRouter>
     </DataProvider>
   );

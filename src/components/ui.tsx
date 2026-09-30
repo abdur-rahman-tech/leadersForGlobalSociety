@@ -14,6 +14,7 @@ type BtnProps = {
   arrow?: boolean;
   className?: string;
   onClick?: () => void;
+  type?: "button" | "submit";
 };
 
 export function Btn({
@@ -25,20 +26,21 @@ export function Btn({
   arrow = false,
   className,
   onClick,
+  type = "button",
 }: BtnProps) {
   const classes = cn(
-    "group/btn inline-flex items-center justify-center gap-2 rounded-md font-display font-semibold transition-all duration-300",
-    size === "sm" ? "px-4 py-2 text-[13px]" : "px-6 py-3 text-sm",
+    "group/btn inline-flex min-h-10 items-center justify-center gap-2 rounded-md font-display font-semibold transition-all duration-300",
+    size === "sm" ? "px-4 py-2 text-[13px]" : "min-h-11 px-6 py-3 text-sm",
     variant === "red" &&
-      "bg-brand-red text-white shadow-md shadow-brand-red/25 hover:bg-brand-red-dark hover:shadow-lg hover:shadow-brand-red/30 hover:-translate-y-0.5",
+    "bg-brand-red text-white shadow-md shadow-brand-red/25 hover:bg-brand-red-dark hover:shadow-lg hover:shadow-brand-red/30 hover:-translate-y-0.5",
     variant === "navy" &&
-      "bg-navy-800 text-white shadow-md shadow-navy-900/20 hover:bg-navy-900 hover:-translate-y-0.5",
+    "bg-navy-800 text-white shadow-md shadow-navy-900/20 hover:bg-navy-900 hover:-translate-y-0.5",
     variant === "outline" &&
-      "border-2 border-navy-800 text-navy-800 hover:bg-navy-800 hover:text-white hover:-translate-y-0.5",
+    "border-2 border-navy-800 text-navy-800 hover:bg-navy-800 hover:text-white hover:-translate-y-0.5",
     variant === "white-outline" &&
-      "border-2 border-white/80 text-white hover:bg-white hover:text-navy-900 hover:-translate-y-0.5",
+    "border-2 border-white/80 text-white hover:bg-white hover:text-navy-900 hover:-translate-y-0.5",
     variant === "white" &&
-      "bg-white text-navy-900 shadow-md hover:bg-navy-50 hover:-translate-y-0.5",
+    "bg-white text-navy-900 shadow-md hover:bg-navy-50 hover:-translate-y-0.5",
     className
   );
   const inner = (
@@ -55,11 +57,8 @@ export function Btn({
         {inner}
       </Link>
     );
-  return (
-    <a href={href ?? "#"} className={classes} onClick={onClick}>
-      {inner}
-    </a>
-  );
+  if (href) return <a href={href} className={classes}>{inner}</a>;
+  return <button type={type} className={classes} onClick={onClick}>{inner}</button>;
 }
 
 /* ---------- Section heading ---------- */

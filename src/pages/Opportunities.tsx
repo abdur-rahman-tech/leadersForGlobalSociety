@@ -17,6 +17,7 @@ import Reveal from "@/components/Reveal";
 import { Pill } from "@/components/ui";
 import { toneForTag } from "@/data";
 import { useData } from "@/store/DataContext";
+import { emailDraftHref } from "@/utils/email";
 import heroImg from "@/assets/hero-opportunities.jpg";
 
 const oppIcons = {
@@ -42,7 +43,7 @@ export default function Opportunities() {
       data.opportunities.filter((o) => {
         const q = query.trim().toLowerCase();
         const matchQ =
-          !q || o.title.toLowerCase().includes(q) || o.org.toLowerCase().includes(q);
+          !q || `${o.title} ${o.org} ${o.location} ${o.category} ${o.tags.join(" ")}`.toLowerCase().includes(q);
         const matchC = category === "All Categories" || o.category === category;
         const matchL = location === "All Locations" || o.location === location;
         return matchQ && matchC && matchL;
@@ -63,9 +64,8 @@ export default function Opportunities() {
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Search bar */}
           <Reveal className="-mt-24 relative z-10 rounded-2xl border border-navy-100 bg-white p-4 shadow-xl shadow-navy-900/10 sm:p-5">
-            <form
-              className="grid gap-3 md:grid-cols-[1.4fr_1fr_1fr_auto]"
-              onSubmit={(e) => e.preventDefault()}
+            <div
+              className="grid gap-3 md:grid-cols-[1.4fr_1fr_1fr]"
               role="search"
               aria-label="Search opportunities"
             >
@@ -74,6 +74,7 @@ export default function Opportunities() {
                 <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <input
                   type="search"
+                  aria-label="Search opportunities by title, organization, location, or tag"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search opportunity..."
@@ -83,6 +84,7 @@ export default function Opportunities() {
               <label className="block">
                 <span className="sr-only">Category</span>
                 <select
+                  aria-label="Filter by category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                   className="w-full appearance-none rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm text-navy-900 focus:border-navy-400 focus:bg-white focus:outline-none"
@@ -95,6 +97,7 @@ export default function Opportunities() {
               <label className="block">
                 <span className="sr-only">Location</span>
                 <select
+                  aria-label="Filter by location"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className="w-full appearance-none rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm text-navy-900 focus:border-navy-400 focus:bg-white focus:outline-none"
@@ -104,15 +107,12 @@ export default function Opportunities() {
                   ))}
                 </select>
               </label>
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy-800 px-6 py-2.5 font-display text-sm font-semibold text-white transition-all hover:bg-navy-900"
-              >
-                <Search className="h-4 w-4" />
-                Search
-              </button>
-            </form>
+            </div>
           </Reveal>
+
+          <p className="mt-5 text-xs text-slate-500" aria-live="polite">
+            Showing {filtered.length} {filtered.length === 1 ? "opportunity" : "opportunities"}
+          </p>
 
           {/* Cards */}
           <div className="mt-10 grid gap-5 md:grid-cols-2">
@@ -120,7 +120,7 @@ export default function Opportunities() {
               const Icon = oppIcons[o.icon];
               return (
                 <Reveal
-                  key={o.title}
+                  key={o.id}
                   delay={(i % 2) * 100}
                   className="group rounded-2xl border border-navy-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-navy-200 hover:shadow-xl hover:shadow-navy-900/10"
                 >
@@ -157,11 +157,13 @@ export default function Opportunities() {
                       ))}
                     </div>
                     <a
-                      href="#"
-                      onClick={(e) => e.preventDefault()}
+                      href={emailDraftHref(`Question about ${o.title}`, `Hello LGS team,
+
+I have a question about this opportunity:
+${o.title} at ${o.org}`)}
                       className="inline-flex shrink-0 items-center gap-1 font-display text-[13px] font-bold text-brand-red underline-offset-4 transition-colors hover:text-brand-red-dark hover:underline"
                     >
-                      View Details
+                      Ask LGS
                       <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                     </a>
                   </div>

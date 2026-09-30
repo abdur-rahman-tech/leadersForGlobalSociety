@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   ArrowRight,
   Globe2,
@@ -12,6 +13,7 @@ import Reveal from "@/components/Reveal";
 import { Btn } from "@/components/ui";
 import heroImg from "@/assets/hero-join.jpg";
 import teamImg from "@/assets/team-photo.jpg";
+import { emailDraftHref } from "@/utils/email";
 
 const ways = [
   {
@@ -53,6 +55,20 @@ const ways = [
 ];
 
 export default function Join() {
+  const [formNotice, setFormNotice] = useState("");
+
+  const submitApplication = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const fields = new FormData(event.currentTarget);
+    const name = String(fields.get("name") ?? "");
+    const email = String(fields.get("email") ?? "");
+    const country = String(fields.get("country") ?? "");
+    const interest = String(fields.get("interest") ?? "");
+    const story = String(fields.get("story") ?? "");
+    window.location.href = emailDraftHref(`LGS application: ${name}`, `Name: ${name}\nEmail: ${email}\nCountry: ${country}\nInterested in: ${interest}\n\nWhy I'd like to join:\n${story}`);
+    setFormNotice("Your email app should open with your application ready to send. It is not sent until you press Send.");
+  };
+
   return (
     <>
       <PageHero
@@ -143,8 +159,7 @@ export default function Join() {
             </h2>
             <p className="mt-3 text-[15px] leading-relaxed text-slate-600">
               Tell us a little about yourself and how you&rsquo;d like to get involved.
-              Our team reviews applications on a rolling basis — you&rsquo;ll hear from
-              us within a week.
+              Complete the form and your email app will open with an application draft for our team.
             </p>
             <ul className="mt-6 space-y-3 text-sm text-slate-600">
               {["Open to young people worldwide", "No fees — ever", "Flexible, remote-first involvement"].map((t) => (
@@ -161,12 +176,14 @@ export default function Join() {
           </Reveal>
 
           <Reveal variant="right" className="rounded-2xl border border-navy-100 bg-white p-6 shadow-lg shadow-navy-900/5 sm:p-8">
-            <form className="grid gap-4 sm:grid-cols-2" onSubmit={(e) => e.preventDefault()}>
+            <form className="grid gap-4 sm:grid-cols-2" onSubmit={submitApplication}>
               <label className="block sm:col-span-1">
                 <span className="mb-1.5 block text-xs font-semibold text-navy-900">Full Name</span>
                 <input
                   required
                   type="text"
+                  name="name"
+                  autoComplete="name"
                   placeholder="Your name"
                   className="w-full rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm focus:border-navy-400 focus:bg-white focus:outline-none"
                 />
@@ -176,6 +193,8 @@ export default function Join() {
                 <input
                   required
                   type="email"
+                  name="email"
+                  autoComplete="email"
                   placeholder="you@email.com"
                   className="w-full rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm focus:border-navy-400 focus:bg-white focus:outline-none"
                 />
@@ -184,13 +203,15 @@ export default function Join() {
                 <span className="mb-1.5 block text-xs font-semibold text-navy-900">Country</span>
                 <input
                   type="text"
+                  name="country"
+                  autoComplete="country-name"
                   placeholder="Your country"
                   className="w-full rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm focus:border-navy-400 focus:bg-white focus:outline-none"
                 />
               </label>
               <label className="block sm:col-span-1">
                 <span className="mb-1.5 block text-xs font-semibold text-navy-900">I want to</span>
-                <select className="w-full appearance-none rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm focus:border-navy-400 focus:bg-white focus:outline-none">
+                <select name="interest" className="w-full appearance-none rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm focus:border-navy-400 focus:bg-white focus:outline-none">
                   {ways.map((w) => (
                     <option key={w.title}>{w.title}</option>
                   ))}
@@ -202,15 +223,17 @@ export default function Join() {
                 </span>
                 <textarea
                   rows={4}
+                  name="story"
                   placeholder="Tell us your story..."
                   className="w-full resize-none rounded-lg border border-navy-100 bg-navy-50/40 px-3.5 py-2.5 text-sm focus:border-navy-400 focus:bg-white focus:outline-none"
                 />
               </label>
               <div className="sm:col-span-2">
-                <Btn href="#apply" arrow className="w-full sm:w-auto">
-                  Submit Application
+                <Btn type="submit" arrow className="w-full sm:w-auto">
+                  Email Application
                 </Btn>
               </div>
+              {formNotice && <p role="status" className="text-xs leading-relaxed text-emerald-700 sm:col-span-2">{formNotice}</p>}
             </form>
           </Reveal>
         </div>

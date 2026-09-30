@@ -40,6 +40,7 @@ export type EventItem = {
   blurb: string;
   status: EventStatus;
   image?: string;
+  linkedinUrl?: string;
 };
 
 export type MemberGroup = "Ambassadors" | "Fellows" | "Alumni" | "Volunteers";
@@ -51,6 +52,7 @@ export type Member = {
   role: string;
   group: MemberGroup;
   image?: string;
+  linkedinUrl?: string;
 };
 
 export type NewsItem = { id: string; tag: string; title: string; date: string };

@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
-import { FacebookIcon, InstagramIcon, LinkedinIcon, YoutubeIcon } from "./BrandIcons";
 import Logo from "./Logo";
 
 const explore = [
@@ -16,14 +15,6 @@ const involved = [
   { label: "Join a Fellowship", to: "/programs" },
   { label: "Volunteer", to: "/join" },
   { label: "Partner With Us", to: "/contact" },
-];
-
-const socials = [
-  { label: "LinkedIn", icon: LinkedinIcon, href: "#" },
-  { label: "Instagram", icon: InstagramIcon, href: "#" },
-  { label: "Facebook", icon: FacebookIcon, href: "#" },
-  { label: "YouTube", icon: YoutubeIcon, href: "#" },
-  { label: "Email", icon: Mail, href: "mailto:leadersforglobalsociety@gmail.com" },
 ];
 
 export default function Footer() {
@@ -85,18 +76,16 @@ export default function Footer() {
             <h3 className="font-display text-sm font-bold uppercase tracking-wider text-white">
               Connect
             </h3>
-            <ul className="mt-4 flex flex-wrap gap-2.5">
-              {socials.map((s) => (
-                <li key={s.label}>
-                  <a
-                    href={s.href}
-                    aria-label={s.label}
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-navy-100 transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-red hover:text-white"
-                  >
-                    <s.icon className="h-4 w-4" />
-                  </a>
-                </li>
-              ))}
+            <ul className="mt-4">
+              <li>
+                <a
+                  href="mailto:leadersforglobalsociety@gmail.com"
+                  className="inline-flex min-h-10 items-center gap-2 rounded-md bg-white/10 px-3 text-sm text-navy-100 transition-colors hover:bg-brand-red hover:text-white"
+                >
+                  <Mail className="h-4 w-4" />
+                  Email LGS
+                </a>
+              </li>
             </ul>
             <p className="mt-6 -rotate-2 font-script text-2xl text-navy-100/80">
               Let&rsquo;s build a more connected &amp; inclusive world — together.
