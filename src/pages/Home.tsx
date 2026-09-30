@@ -29,7 +29,7 @@ import { useData } from "@/store/DataContext";
 import { emailDraftHref } from "@/utils/email";
 
 import heroImg from "@/assets/hero-home(1).jpg";
-import fellowshipImg from "@/assets/fellowship.jpg";
+import fellowshipImg from "@/assets/fellowship.png";
 import networkImg from "@/assets/hero-network.jpg";
 import eventsImg from "@/assets/hero-events.jpg";
 import teamImg from "@/assets/team-photo.jpg";
