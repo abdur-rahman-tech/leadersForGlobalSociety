@@ -85,10 +85,11 @@ export default function Community() {
                 <span
                   className={cn(
                     "mx-auto flex h-16 w-16 items-center justify-center rounded-full font-display text-lg font-bold text-white shadow-md ring-4 ring-white transition-transform duration-300 group-hover:scale-110",
+                    "overflow-hidden",
                     avatarColor(m.name)
                   )}
                 >
-                  {initialsOf(m.name)}
+                  {m.image ? <img src={m.image} alt="" className="h-full w-full object-cover" /> : initialsOf(m.name)}
                 </span>
                 <h2 className="mt-4 font-display text-base font-bold text-navy-900">{m.name}</h2>
                 <p className="mt-0.5 flex items-center justify-center gap-1 text-xs text-slate-500">

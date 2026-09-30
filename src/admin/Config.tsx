@@ -16,7 +16,7 @@ import { Pill } from "@/components/ui";
 export type FieldDef = {
     name: string;
     label: string;
-    type: "text" | "textarea" | "select" | "tags";
+    type: "text" | "textarea" | "select" | "tags" | "image";
     options?: { value: string; label: string }[];
     required?: boolean;
     placeholder?: string;
@@ -59,8 +59,13 @@ export const collections: CollectionConfig[] = [
             { name: "meta", label: "Location / Time", type: "text", required: true, placeholder: "Hyderabad | 7:00 PM" },
             { name: "blurb", label: "Description", type: "textarea", required: true },
             { name: "status", label: "Status", type: "select", required: true, options: opt(["Upcoming", "Past"]) },
+            { name: "image", label: "Event image", type: "image", hint: "Upload an image or paste an image URL. Uploads are optimized for browser storage." },
         ],
         columns: [
+            {
+                header: "Image",
+                render: (e) => e.image ? <img src={String(e.image)} alt="" className="h-10 w-16 rounded-md object-cover" /> : <span className="text-xs text-slate-400">None</span>,
+            },
             {
                 header: "Date",
                 render: (e) => (
@@ -88,6 +93,7 @@ export const collections: CollectionConfig[] = [
         fields: [
             { name: "title", label: "Title", type: "text", required: true },
             { name: "blurb", label: "Description", type: "textarea", required: true },
+            { name: "image", label: "Program image", type: "image", hint: "Upload an image or paste an image URL. Uploads are optimized for browser storage." },
             {
                 name: "icon",
                 label: "Icon",
@@ -118,6 +124,10 @@ export const collections: CollectionConfig[] = [
             },
         ],
         columns: [
+            {
+                header: "Image",
+                render: (p) => p.image ? <img src={String(p.image)} alt="" className="h-10 w-16 rounded-md object-cover" /> : <span className="text-xs text-slate-400">None</span>,
+            },
             { header: "Title", render: (p) => <span className="font-semibold text-navy-900">{String(p.title)}</span> },
             { header: "Icon", render: (p) => <Pill tone="slate">{String(p.icon)}</Pill> },
             { header: "Color", render: (p) => <Pill tone="blue">{String(p.color)}</Pill> },
@@ -192,6 +202,7 @@ export const collections: CollectionConfig[] = [
             { name: "name", label: "Full name", type: "text", required: true },
             { name: "country", label: "Country", type: "text", required: true },
             { name: "role", label: "Role / Program", type: "text", required: true },
+            { name: "image", label: "Profile image", type: "image", hint: "Upload an image or paste an image URL. Uploads are optimized for browser storage." },
             {
                 name: "group",
                 label: "Group",
@@ -201,6 +212,10 @@ export const collections: CollectionConfig[] = [
             },
         ],
         columns: [
+            {
+                header: "Image",
+                render: (m) => m.image ? <img src={String(m.image)} alt="" className="h-10 w-10 rounded-full object-cover" /> : <span className="text-xs text-slate-400">None</span>,
+            },
             { header: "Name", render: (m) => <span className="font-semibold text-navy-900">{String(m.name)}</span> },
             { header: "Country", render: (m) => String(m.country) },
             { header: "Role", render: (m) => String(m.role) },

@@ -74,6 +74,9 @@ export default function Events() {
                   delay={i * 100}
                   className="group flex flex-col gap-5 rounded-2xl border border-navy-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-navy-200 hover:shadow-lg hover:shadow-navy-900/8 sm:flex-row sm:items-center"
                 >
+                  {e.image && (
+                    <img src={e.image} alt="" className="h-40 w-full shrink-0 rounded-xl object-cover sm:h-24 sm:w-36" />
+                  )}
                   <div
                     className={cn(
                       "flex w-24 shrink-0 flex-col items-center rounded-xl px-4 py-3 text-white shadow-md",

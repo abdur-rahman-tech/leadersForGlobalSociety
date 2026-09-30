@@ -397,9 +397,11 @@ export default function Home() {
                 <Reveal key={p.id} delay={i * 70} variant="zoom">
                   <Link
                     to="/programs"
-                    className={`group flex h-full min-h-[190px] flex-col justify-between rounded-xl bg-gradient-to-br ${programGradients[p.color]} p-5 text-white shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
+                    className={`group relative flex h-full min-h-[190px] flex-col justify-between overflow-hidden rounded-xl bg-gradient-to-br ${programGradients[p.color]} p-5 text-white shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
                   >
-                    <div>
+                    {p.image && <img src={p.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-45" />}
+                    {p.image && <span className="absolute inset-0 bg-navy-950/45" />}
+                    <div className="relative z-10">
                       <Icon className="h-6 w-6 opacity-90 transition-transform duration-300 group-hover:scale-110" />
                       <h3 className="mt-3 font-display text-[15px] font-bold leading-snug">
                         {p.title}
@@ -408,7 +410,7 @@ export default function Home() {
                         {p.blurb}
                       </p>
                     </div>
-                    <span className="mt-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/40 transition-all duration-300 group-hover:border-white group-hover:bg-white group-hover:text-navy-900">
+                    <span className="relative z-10 mt-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/40 transition-all duration-300 group-hover:border-white group-hover:bg-white group-hover:text-navy-900">
                       <ArrowUpRight className="h-4 w-4" />
                     </span>
                   </Link>
@@ -423,7 +425,7 @@ export default function Home() {
         <Reveal variant="zoom">
           <div className="relative overflow-hidden rounded-2xl bg-navy-950 shadow-xl">
             <img
-              src={fellowshipImg}
+              src={data.programs[0]?.image ?? fellowshipImg}
               alt="Student looking toward the future"
               className="absolute inset-0 h-full w-full object-cover opacity-70"
             />

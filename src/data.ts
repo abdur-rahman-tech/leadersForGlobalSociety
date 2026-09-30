@@ -12,6 +12,7 @@ export type Program = {
   blurb: string;
   color: ProgramColor;
   icon: ProgramIcon;
+  image?: string;
 };
 
 export type OppIcon = "landmark" | "globe" | "users" | "laptop" | "book" | "dove";
@@ -38,6 +39,7 @@ export type EventItem = {
   meta: string;
   blurb: string;
   status: EventStatus;
+  image?: string;
 };
 
 export type MemberGroup = "Ambassadors" | "Fellows" | "Alumni" | "Volunteers";
@@ -48,6 +50,7 @@ export type Member = {
   country: string;
   role: string;
   group: MemberGroup;
+  image?: string;
 };
 
 export type NewsItem = { id: string; tag: string; title: string; date: string };

@@ -35,6 +35,28 @@ function formToItem(fields: FieldDef[], form: Record<string, string>): Record<st
     return item;
 }
 
+async function compressImage(file: File): Promise<string> {
+    if (file.size > 12 * 1024 * 1024) throw new Error("Choose an image smaller than 12 MB.");
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 1400 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("This image could not be processed.");
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    const blob = await new Promise<Blob>((resolve, reject) =>
+        canvas.toBlob((result) => result ? resolve(result) : reject(new Error("This image could not be processed.")), "image/webp", 0.78)
+    );
+    return await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => typeof reader.result === "string" ? resolve(reader.result) : reject(new Error("This image could not be read."));
+        reader.onerror = () => reject(new Error("This image could not be read."));
+        reader.readAsDataURL(blob);
+    });
+}
+
 /* ---------- Modal form ---------- */
 
 function ItemModal({
@@ -50,6 +72,8 @@ function ItemModal({
     const [form, setForm] = useState<Record<string, string>>(() =>
         itemToForm(config.fields, item ?? undefined)
     );
+    const [uploadError, setUploadError] = useState("");
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -99,7 +123,49 @@ function ItemModal({
                                 {f.label}
                                 {f.required && <span className="text-brand-red"> *</span>}
                             </span>
-                            {f.type === "textarea" ? (
+                            {f.type === "image" ? (
+                                <div className="space-y-2.5">
+                                    <input
+                                        type="text"
+                                        value={form[f.name]}
+                                        placeholder="https://example.com/image.jpg"
+                                        onChange={(e) => { set(f.name, e.target.value); setUploadError(""); }}
+                                        className={inputCls}
+                                    />
+                                    <div className="flex flex-wrap items-center gap-3">
+                                        <input
+                                            type="file"
+                                            accept="image/jpeg,image/png,image/webp,image/gif"
+                                            disabled={uploading}
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+                                                setUploading(true);
+                                                setUploadError("");
+                                                try {
+                                                    set(f.name, await compressImage(file));
+                                                } catch (error) {
+                                                    setUploadError(error instanceof Error ? error.message : "Image upload failed.");
+                                                } finally {
+                                                    setUploading(false);
+                                                    e.target.value = "";
+                                                }
+                                            }}
+                                            className="block min-w-0 flex-1 text-xs text-slate-500 file:mr-3 file:rounded-md file:border-0 file:bg-navy-50 file:px-3 file:py-2 file:font-semibold file:text-navy-800 hover:file:bg-navy-100"
+                                        />
+                                        {form[f.name] && (
+                                            <button type="button" onClick={() => set(f.name, "")} className="text-xs font-semibold text-brand-red hover:underline">
+                                                Remove image
+                                            </button>
+                                        )}
+                                    </div>
+                                    {form[f.name] && (
+                                        <img src={form[f.name]} alt="Image preview" className="h-28 w-full rounded-lg border border-slate-200 object-cover" />
+                                    )}
+                                    {uploading && <span className="block text-[11px] text-slate-500">Optimizing image...</span>}
+                                    {uploadError && <span className="block text-[11px] text-brand-red">{uploadError}</span>}
+                                </div>
+                            ) : f.type === "textarea" ? (
                                 <textarea
                                     rows={3}
                                     required={f.required}
@@ -144,6 +210,7 @@ function ItemModal({
                         </button>
                         <button
                             type="submit"
+                            disabled={uploading}
                             className="rounded-lg bg-brand-red px-5 py-2.5 font-display text-sm font-semibold text-white shadow-md shadow-brand-red/25 transition-colors hover:bg-brand-red-dark"
                         >
                             {item ? "Save Changes" : `Add ${config.singular}`}

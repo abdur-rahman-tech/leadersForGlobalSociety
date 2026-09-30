@@ -47,6 +47,7 @@ export default function Programs() {
                 delay={(i % 3) * 100}
                 className="group flex flex-col rounded-2xl border border-navy-100 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-navy-200 hover:shadow-xl hover:shadow-navy-900/10"
               >
+                {p.image && <img src={p.image} alt="" className="mb-5 aspect-[16/9] w-full rounded-lg object-cover" />}
                 <span
                   className={`flex h-13 w-13 items-center justify-center rounded-xl ring-1 ${accent.chip} ${accent.icon} transition-transform duration-300 group-hover:scale-110`}
                 >
