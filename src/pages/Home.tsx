@@ -29,10 +29,42 @@ import { useData } from "@/store/DataContext";
 import { emailDraftHref } from "@/utils/email";
 
 import heroImg from "@/assets/hero-home(1).jpg";
+import heroProgramsImg from "@/assets/hero-programs.jpg";
+import heroNetworkImg from "@/assets/hero-network.jpg";
+import heroEventsImg from "@/assets/hero-events.jpg";
+import heroOpportunitiesImg from "@/assets/hero-opportunities.jpg";
 import fellowshipImg from "@/assets/fellowship.jpg";
 import networkImg from "@/assets/hero-network.jpg";
 import eventsImg from "@/assets/hero-events.jpg";
 import teamImg from "@/assets/team-photo.jpg";
+
+const heroSlides = [
+  {
+    image: heroImg,
+    title: "Different backgrounds. Same dream.",
+    detail: "A global community of young leaders creating impact together.",
+  },
+  {
+    image: heroProgramsImg,
+    title: "Programs built for growth.",
+    detail: "Leadership, mentorship, and real-world opportunities for the next generation.",
+  },
+  {
+    image: heroNetworkImg,
+    title: "Connections that open doors.",
+    detail: "Meet changemakers, mentors, and partners shaping a more connected world.",
+  },
+  {
+    image: heroEventsImg,
+    title: "Opportunities that move people.",
+    detail: "From forums to fellowships, turn potential into action with our events and programs.",
+  },
+  {
+    image: heroOpportunitiesImg,
+    title: "Vision for tomorrow, action today.",
+    detail: "Help young people thrive through access, courage, and collaborative leadership.",
+  },
+];
 
 const programIcons = {
   rocket: Rocket,
@@ -169,6 +201,17 @@ function AnimatedStat({
 export default function Home() {
   const { data } = useData();
   const [newsletterNotice, setNewsletterNotice] = useState("");
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const intervalId = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % heroSlides.length);
+    }, 5000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
 
   return (
     <>
@@ -178,14 +221,22 @@ export default function Home() {
       >
         {/* Background photography */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 lg:left-[16%]">
-            <img
-              src={heroImg}
-              alt="A group of young people standing together looking toward a city skyline"
-              className="h-full w-full object-cover object-[58%_46%]"
-              fetchPriority="high"
-            />
-          </div>
+          {heroSlides.map((slide, index) => (
+            <div
+              key={slide.title}
+              className={[
+                "absolute inset-0 transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+                index === activeSlide ? "opacity-100 scale-100" : "opacity-0 scale-105",
+              ].join(" ")}
+            >
+              <img
+                src={slide.image}
+                alt={slide.title}
+                className="h-full w-full object-cover object-[58%_46%]"
+                fetchPriority={index === 0 ? "high" : "auto"}
+              />
+            </div>
+          ))}
 
           {/* Mobile readability wash */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#fdfaf7]/96 via-[#fdfaf7]/88 to-[#fdfaf7]/55 lg:hidden" />
@@ -197,13 +248,31 @@ export default function Home() {
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#fdfaf7]/30 to-transparent" />
         </div>
 
+        <div className="absolute bottom-5 right-4 z-10 hidden items-center gap-2 lg:flex">
+          {heroSlides.map((slide, index) => (
+            <button
+              key={slide.title}
+              type="button"
+              aria-label={`Show slide ${index + 1}: ${slide.title}`}
+              aria-pressed={index === activeSlide}
+              onClick={() => setActiveSlide(index)}
+              className={[
+                "h-2.5 rounded-full border border-white/80 transition-all duration-300",
+                index === activeSlide ? "w-10 bg-white" : "w-2.5 bg-white/60 hover:bg-white/90",
+              ].join(" ")}
+            />
+          ))}
+        </div>
+
         {/* Handwritten note over the photo */}
         <p className="hand pointer-events-none absolute right-[4%] top-[15%] hidden max-w-[230px] -rotate-[3deg] text-right text-[28px] leading-[1.08] text-white drop-shadow-[0_3px_10px_rgba(4,18,45,.55)] lg:block xl:text-[34px]">
-          Different
-          <br />
-          Backgrounds.
-          <br />
-          Same Dream.
+          {heroSlides[activeSlide].title.split(".").map((part, index) => (
+            <span key={`${part}-${index}`}>
+              {part}
+              {index < heroSlides[activeSlide].title.split(".").length - 1 ? "." : ""}
+              {index === 0 ? <br /> : null}
+            </span>
+          ))}
         </p>
 
         {/* Corner ribbon */}
