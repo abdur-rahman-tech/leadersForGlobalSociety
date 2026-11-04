@@ -3,6 +3,7 @@ import { DataProvider } from "@/store/DataContext";
 import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ClickSpark from "@/components/ClickSpark";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Programs from "@/pages/Programs";
@@ -25,6 +26,21 @@ function ScrollToTop() {
 function AppLayout() {
   const { pathname } = useLocation();
   const showPublicChrome = !pathname.startsWith("/admin");
+  const routes = (
+    <Routes>
+      <Route path="/admin/*" element={<AdminApp />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/programs" element={<Programs />} />
+      <Route path="/opportunities" element={<Opportunities />} />
+      <Route path="/join" element={<Join />} />
+      <Route path="/community" element={<Community />} />
+      <Route path="/events" element={<Events />} />
+      <Route path="/impact" element={<Impact />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="*" element={<Home />} />
+    </Routes>
+  );
 
   return (
     <>
@@ -32,19 +48,20 @@ function AppLayout() {
       <div className="flex min-h-screen flex-col">
         {showPublicChrome && <Navbar />}
         <main className="flex-1">
-          <Routes>
-            <Route path="/admin/*" element={<AdminApp />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/programs" element={<Programs />} />
-            <Route path="/opportunities" element={<Opportunities />} />
-            <Route path="/join" element={<Join />} />
-            <Route path="/community" element={<Community />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/impact" element={<Impact />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="*" element={<Home />} />
-          </Routes>
+          {showPublicChrome ? (
+            <ClickSpark
+              sparkColor="#fff"
+              shape="line"
+              sparkCount={8}
+              sparkSize={14}
+              sparkRadius={30}
+              duration={500}
+            >
+              {routes}
+            </ClickSpark>
+          ) : (
+            routes
+          )}
         </main>
         {showPublicChrome && <Footer />}
       </div>
