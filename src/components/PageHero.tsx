@@ -25,9 +25,9 @@ export default function PageHero({
       <img
         src={image}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover opacity-60"
+        className="absolute inset-0 h-full w-full object-cover opacity-85"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-navy-950/95 via-navy-900/75 to-navy-900/35" />
+      <div className="absolute inset-0 bg-gradient-to-r from-navy-950/80 via-navy-900/50 to-navy-900/20" />
       <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-brand-red via-brand-red/60 to-transparent" />
       <div
         className={cn(

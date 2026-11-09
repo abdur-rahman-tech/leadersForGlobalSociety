@@ -28,42 +28,40 @@ import { avatarColor, initialsOf, programGradients, type StatIcon } from "@/data
 import { useData } from "@/store/DataContext";
 import { emailDraftHref } from "@/utils/email";
 
-import heroImg from "@/assets/hero-home(1).jpg";
-import heroProgramsImg from "@/assets/hero-programs.jpg";
-import heroNetworkImg from "@/assets/hero-network.jpg";
-import heroEventsImg from "@/assets/hero-events.jpg";
-import heroOpportunitiesImg from "@/assets/hero-opportunities.jpg";
+const homeSlideImages = [
+  new URL("@/assets/home-slides/optimized/1.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/2.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/3.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/4.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/5..jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/6.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/7.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/8.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/9.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/10.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/11.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/12.jpg", import.meta.url).href,
+  new URL("@/assets/home-slides/optimized/13.jpg", import.meta.url).href,
+];
 import fellowshipImg from "@/assets/fellowship.jpg";
 import networkImg from "@/assets/hero-network.jpg";
 import eventsImg from "@/assets/hero-events.jpg";
 import teamImg from "@/assets/team-photo.jpg";
 
 const heroSlides = [
-  {
-    image: heroImg,
-    title: "Different backgrounds. Same dream.",
-    detail: "A global community of young leaders creating impact together.",
-  },
-  {
-    image: heroProgramsImg,
-    title: "Programs built for growth.",
-    detail: "Leadership, mentorship, and real-world opportunities for the next generation.",
-  },
-  {
-    image: heroNetworkImg,
-    title: "Connections that open doors.",
-    detail: "Meet changemakers, mentors, and partners shaping a more connected world.",
-  },
-  {
-    image: heroEventsImg,
-    title: "Opportunities that move people.",
-    detail: "From forums to fellowships, turn potential into action with our events and programs.",
-  },
-  {
-    image: heroOpportunitiesImg,
-    title: "Vision for tomorrow, action today.",
-    detail: "Help young people thrive through access, courage, and collaborative leadership.",
-  },
+  { image: homeSlideImages[0], title: "Different backgrounds. Same dream." },
+  { image: homeSlideImages[1], title: "Leadership begins with you." },
+  { image: homeSlideImages[2], title: "Learn together. Lead together." },
+  { image: homeSlideImages[3], title: "Big ideas. Real impact." },
+  { image: homeSlideImages[4], title: "Build skills. Open doors." },
+  { image: homeSlideImages[5], title: "Connect beyond borders." },
+  { image: homeSlideImages[6], title: "Make your voice count." },
+  { image: homeSlideImages[7], title: "Create change where it matters." },
+  { image: homeSlideImages[8], title: "Grow through mentorship." },
+  { image: homeSlideImages[9], title: "Turn ambition into action." },
+  { image: homeSlideImages[10], title: "Discover your next opportunity." },
+  { image: homeSlideImages[11], title: "Stronger communities. Brighter futures." },
+  { image: homeSlideImages[12], title: "One global community. Many possibilities." },
 ];
 
 const programIcons = {
@@ -239,10 +237,10 @@ export default function Home() {
           ))}
 
           {/* Mobile readability wash */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#fdfaf7]/96 via-[#fdfaf7]/88 to-[#fdfaf7]/55 lg:hidden" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#fdfaf7]/88 via-[#fdfaf7]/72 to-[#fdfaf7]/38 lg:hidden" />
 
-          {/* Exact left fade: solid cream behind the text, smoothly revealing the photo */}
-          <div className="absolute inset-0 hidden bg-[linear-gradient(97deg,#fdfaf7_0%,#fdfaf7_26%,rgba(253,250,247,.94)_34%,rgba(253,250,247,.50)_44%,rgba(253,250,247,.08)_54%,rgba(253,250,247,0)_62%)] lg:block" />
+          {/* Soft left fade keeps the copy readable while letting more photography show through. */}
+          <div className="absolute inset-0 hidden bg-[linear-gradient(97deg,rgba(253,250,247,.96)_0%,rgba(253,250,247,.92)_20%,rgba(253,250,247,.78)_32%,rgba(253,250,247,.40)_43%,rgba(253,250,247,.06)_55%,rgba(253,250,247,0)_63%)] lg:block" />
 
           {/* Soft bottom blend */}
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#fdfaf7]/30 to-transparent" />
